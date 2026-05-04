@@ -1,5 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { apiReference } from '@scalar/hono-api-reference'
+import { ExtendedEndpointList } from '#modules/extended/controllers'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
@@ -16,7 +17,7 @@ const API_LIMITS = {
   hostLimits: 'Vercel plan and upstream JioSaavn availability can still apply.'
 }
 
-const ENDPOINTS: Array<{ method: string; path: string; description: string }> = [
+const BASE_ENDPOINTS: Array<{ method: string; path: string; description: string }> = [
   { method: 'GET', path: '/health', description: 'Health check for monitors and Vercel uptime checks.' },
   { method: 'GET', path: '/api', description: 'API metadata with documentation and OpenAPI links.' },
   { method: 'GET', path: '/api/endpoints', description: 'Machine-readable list of available API endpoints.' },
@@ -36,6 +37,8 @@ const ENDPOINTS: Array<{ method: string; path: string; description: string }> = 
   { method: 'GET', path: '/api/artists/{id}/albums', description: 'Fetch albums by artist ID.' },
   { method: 'GET', path: '/api/playlists?id={id}', description: 'Fetch playlist details by ID or link.' }
 ]
+
+const ENDPOINTS = [...BASE_ENDPOINTS, ...ExtendedEndpointList].sort((a, b) => a.path.localeCompare(b.path))
 
 const EndpointModel = z.object({
   method: z.string().openapi({ example: 'GET' }),

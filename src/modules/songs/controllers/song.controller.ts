@@ -26,6 +26,12 @@ export class SongController implements Routes {
         operationId: 'getSongByIdsOrLink',
         request: {
           query: z.object({
+            id: z.string().optional().openapi({
+              title: 'Song ID',
+              description: 'Single song ID',
+              type: 'string',
+              example: '3IoDK8qI'
+            }),
             ids: z.string().optional().openapi({
               title: 'Song IDs',
               description: 'Comma-separated list of song IDs',
@@ -69,15 +75,15 @@ export class SongController implements Routes {
         }
       }),
       async (ctx) => {
-        const { link, ids } = ctx.req.valid('query')
+        const { link, id, ids } = ctx.req.valid('query')
 
-        if (!link && !ids) {
+        if (!link && !id && !ids) {
           return ctx.json({ success: false, message: 'Either song IDs or link is required' }, 400)
         }
 
         const response = link
           ? await this.songService.getSongByLink(link)
-          : await this.songService.getSongByIds({ songIds: ids! })
+          : await this.songService.getSongByIds({ songIds: ids || id! })
 
         return ctx.json({ success: true, data: response })
       }

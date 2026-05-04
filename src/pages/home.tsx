@@ -40,7 +40,7 @@ const features = [
 
 const stats = [
   ['5 Domains', 'Search, songs, albums, artists, playlists'],
-  ['18 Routes', 'Including health, limits, and endpoint discovery'],
+  ['50+ Routes', 'Songs, lyrics, browse, podcasts, and trending'],
   ['OpenAPI 3.1', 'Schema generated from route definitions'],
   ['No App Limit', 'No rate limiter added in this API']
 ]
@@ -52,6 +52,9 @@ const endpoints = [
   ['GET', '/api/search?query=Believer'],
   ['GET', '/api/search/songs?query=Kesariya'],
   ['GET', '/api/songs?ids=3IoDK8qI'],
+  ['GET', '/api/lyrics?query=tum hi ho'],
+  ['GET', '/api/trending/songs'],
+  ['GET', '/api/home'],
   ['GET', '/api/songs/{id}/suggestions'],
   ['GET', '/api/albums?id={id}'],
   ['GET', '/api/artists/{id}/songs'],
