@@ -53,6 +53,12 @@ Use the Vercel dashboard and import this GitHub repository, or run:
 npm run vercel:deploy
 ```
 
+Dashboard import link:
+
+```text
+https://vercel.com/new/clone?repository-url=https://github.com/shnwazdeveloper/shnwazdev-jiosaavn-api
+```
+
 The project exports the Hono app from `src/server.ts`, which Vercel detects as a backend entrypoint.
 
 ## Repository
