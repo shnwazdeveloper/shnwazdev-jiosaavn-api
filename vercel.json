@@ -10,7 +10,23 @@
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api",
+      "destination": "/api"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/health",
+      "destination": "/api"
+    },
+    {
+      "source": "/docs",
+      "destination": "/api"
+    },
+    {
+      "source": "/swagger",
       "destination": "/api"
     }
   ],
