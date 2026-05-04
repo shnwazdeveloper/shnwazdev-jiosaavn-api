@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": "https://github.com/shnwazdeveloper/shnwazdev-jiosaavn-api",
   "author": "shnwazdev",
-  "main": "src/index.ts",
+  "main": "api/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
