@@ -1,1 +1,1 @@
-export * from './artist.helper'
+export * from './artist.helper.js'

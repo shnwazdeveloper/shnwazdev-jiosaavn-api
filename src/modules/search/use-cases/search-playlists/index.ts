@@ -1,1 +1,1 @@
-export * from './search-playlists.use-case'
+export * from './search-playlists.use-case.js'

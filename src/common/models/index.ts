@@ -1,1 +1,1 @@
-export * from './download.model'
+export * from './download.model.js'

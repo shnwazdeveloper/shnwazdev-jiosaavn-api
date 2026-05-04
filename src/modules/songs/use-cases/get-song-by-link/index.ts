@@ -1,1 +1,1 @@
-export * from './get-song-by-link.use-case'
+export * from './get-song-by-link.use-case.js'

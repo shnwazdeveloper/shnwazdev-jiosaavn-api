@@ -33,5 +33,5 @@ export default {
     'webapi',
     'webradio'
   ],
-  ignorePaths: ['**/node_modules/**', 'dist', 'coverage', '.vscode', 'CHANGELOG.md']
+  ignorePaths: ['**/node_modules/**', 'dist', 'coverage', '.vscode', '.vercel-sim', 'CHANGELOG.md']
 }

@@ -17,15 +17,25 @@
   },
   "sideEffects": false,
   "imports": {
+    "#modules/index": {
+      "types": "./src/modules/index.ts",
+      "production": "./dist/modules/index.js",
+      "default": "./src/modules/index.js"
+    },
+    "#modules/*.model": {
+      "types": "./src/modules/*.model.ts",
+      "production": "./dist/modules/*.model.js",
+      "default": "./src/modules/*.model.js"
+    },
     "#modules/*": {
-      "types": "./src/modules/*/index.d.ts",
+      "types": "./src/modules/*/index.ts",
       "production": "./dist/modules/*/index.js",
-      "default": "./src/modules/*/"
+      "default": "./src/modules/*/index.js"
     },
     "#common/*": {
-      "types": "./src/common/*/index.d.ts",
+      "types": "./src/common/*/index.ts",
       "production": "./dist/common/*/index.js",
-      "default": "./src/common/*/"
+      "default": "./src/common/*/index.js"
     }
   },
   "scripts": {

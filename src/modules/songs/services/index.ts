@@ -1,1 +1,1 @@
-export * from './song.service'
+export * from './song.service.js'

@@ -1,1 +1,1 @@
-export * from './song.controller'
+export * from './song.controller.js'

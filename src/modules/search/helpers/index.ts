@@ -1,1 +1,1 @@
-export * from './search.helper'
+export * from './search.helper.js'

@@ -1,1 +1,1 @@
-export * from './get-artist-songs.use-case'
+export * from './get-artist-songs.use-case.js'

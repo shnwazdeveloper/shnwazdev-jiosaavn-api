@@ -1,1 +1,1 @@
-export * from './playlist.controller'
+export * from './playlist.controller.js'

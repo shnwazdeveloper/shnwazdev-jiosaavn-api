@@ -1,1 +1,1 @@
-export * from './artist.controller'
+export * from './artist.controller.js'

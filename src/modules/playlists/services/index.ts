@@ -1,1 +1,1 @@
-export * from './playlist.service'
+export * from './playlist.service.js'

@@ -1,1 +1,1 @@
-export * from './extended.controller'
+export * from './extended.controller.js'

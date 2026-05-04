@@ -1,2 +1,2 @@
-export * from './song-suggestion.model'
-export * from './song.model'
+export * from './song-suggestion.model.js'
+export * from './song.model.js'

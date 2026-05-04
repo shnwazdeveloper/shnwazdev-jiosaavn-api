@@ -1,2 +1,2 @@
-export * from './endpoint.constant'
-export * from './user-agents.constant'
+export * from './endpoint.constant.js'
+export * from './user-agents.constant.js'

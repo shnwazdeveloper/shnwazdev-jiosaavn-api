@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { SongAPIResponseModel } from './song.model'
+import { SongAPIResponseModel } from './song.model.js'
 
 const SongStationAPIResponseModel = z.record(
   z.string(),

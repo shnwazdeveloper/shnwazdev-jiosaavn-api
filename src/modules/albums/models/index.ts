@@ -1,1 +1,1 @@
-export * from './album.model'
+export * from './album.model.js'

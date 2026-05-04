@@ -1,3 +1,3 @@
-export * from './use-case.type'
-export * from './route.type'
-export * from './link.type'
+export * from './use-case.type.js'
+export * from './route.type.js'
+export * from './link.type.js'
