@@ -17,9 +17,9 @@ const features = [
     body: 'Fetch songs by ID or URL, get albums and playlists, and request suggestions for playback flows.'
   },
   {
-    label: 'A',
-    title: 'Artist Library',
-    body: 'Artist profiles, songs, and albums are exposed through clean JSON responses.'
+    label: 'N',
+    title: 'No App Limit',
+    body: 'No app-level rate limiter is added, so clients can use the routes freely while normal hosting limits still apply.'
   },
   {
     label: 'V',
@@ -40,14 +40,15 @@ const features = [
 
 const stats = [
   ['5 Domains', 'Search, songs, albums, artists, playlists'],
-  ['17 Routes', 'Including health and endpoint discovery'],
+  ['18 Routes', 'Including health, limits, and endpoint discovery'],
   ['OpenAPI 3.1', 'Schema generated from route definitions'],
-  ['Node + Hono', 'Fast TypeScript backend for Vercel']
+  ['No App Limit', 'No rate limiter added in this API']
 ]
 
 const endpoints = [
   ['GET', '/health'],
   ['GET', '/api/endpoints'],
+  ['GET', '/api/limits'],
   ['GET', '/api/search?query=Believer'],
   ['GET', '/api/search/songs?query=Kesariya'],
   ['GET', '/api/songs?ids=3IoDK8qI'],
@@ -92,6 +93,8 @@ Home.get('/', (c) => {
               --text: #f6f7fb;
               --muted: #aeb6c6;
               --line: #303743;
+              --glass: rgba(25, 29, 36, 0.58);
+              --glass-strong: rgba(32, 37, 46, 0.72);
               --cyan: #61d4ff;
               --green: #8de36c;
               --coral: #ff8a7a;
@@ -112,10 +115,7 @@ Home.get('/', (c) => {
               font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
               letter-spacing: 0;
               color: var(--text);
-              background:
-                linear-gradient(135deg, rgba(97, 212, 255, 0.08), transparent 30%),
-                linear-gradient(225deg, rgba(255, 138, 122, 0.08), transparent 28%),
-                linear-gradient(180deg, #101114 0%, #12151a 55%, #0f1013 100%);
+              background: linear-gradient(180deg, #101114 0%, #14171c 52%, #0f1013 100%);
               line-height: 1.55;
               overflow-x: hidden;
             }
@@ -125,7 +125,7 @@ Home.get('/', (c) => {
               position: fixed;
               inset: 0;
               pointer-events: none;
-              opacity: 0.23;
+              opacity: 0.19;
               background-image:
                 linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
@@ -135,13 +135,30 @@ Home.get('/', (c) => {
 
             a { color: inherit; }
 
+            @keyframes fadeUp {
+              from { opacity: 0; transform: translateY(18px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+
+            @keyframes slideDown {
+              from { opacity: 0; transform: translateY(-12px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+
+            @keyframes floatPanel {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-8px); }
+            }
+
             .topbar {
               position: sticky;
               top: 0;
               z-index: 10;
               border-bottom: 1px solid rgba(255,255,255,0.08);
-              background: rgba(16,17,20,0.82);
-              backdrop-filter: blur(12px);
+              background: rgba(16,17,20,0.72);
+              backdrop-filter: blur(18px);
+              -webkit-backdrop-filter: blur(18px);
+              animation: slideDown 420ms ease both;
             }
 
             .topbar-inner,
@@ -176,7 +193,9 @@ Home.get('/', (c) => {
               flex: 0 0 auto;
               border: 1px solid rgba(255,255,255,0.14);
               border-radius: 8px;
-              background: linear-gradient(135deg, rgba(97,212,255,0.22), rgba(255,138,122,0.18));
+              background: rgba(255,255,255,0.08);
+              backdrop-filter: blur(12px);
+              -webkit-backdrop-filter: blur(12px);
               color: #ffffff;
               font-size: 0.82rem;
             }
@@ -207,12 +226,19 @@ Home.get('/', (c) => {
               color: #edf3ff;
               background: rgba(255,255,255,0.04);
               white-space: nowrap;
+              backdrop-filter: blur(14px);
+              -webkit-backdrop-filter: blur(14px);
+              transition:
+                transform 180ms ease,
+                border-color 180ms ease,
+                background 180ms ease;
             }
 
             .nav a:hover,
             .button:hover {
               border-color: rgba(97,212,255,0.58);
-              background: rgba(97,212,255,0.11);
+              background: rgba(255,255,255,0.1);
+              transform: translateY(-2px);
             }
 
             .hero {
@@ -253,14 +279,14 @@ Home.get('/', (c) => {
             h1 {
               max-width: 780px;
               margin-top: 20px;
-              font-size: clamp(2.35rem, 6.2vw, 5.45rem);
+              font-size: 5.2rem;
             }
 
             .lead {
               max-width: 720px;
               margin: 22px 0 0;
               color: var(--muted);
-              font-size: clamp(1rem, 2vw, 1.22rem);
+              font-size: 1.16rem;
             }
 
             .actions {
@@ -271,9 +297,9 @@ Home.get('/', (c) => {
             }
 
             .button.primary {
-              border-color: transparent;
-              background: linear-gradient(135deg, var(--cyan), var(--green));
-              color: #091014;
+              border-color: rgba(255,255,255,0.28);
+              background: rgba(246,247,251,0.9);
+              color: #101114;
             }
 
             .button.secondary {
@@ -293,13 +319,31 @@ Home.get('/', (c) => {
             .console {
               border: 1px solid rgba(255,255,255,0.1);
               border-radius: 8px;
-              background: rgba(25,29,36,0.78);
-              box-shadow: 0 18px 55px rgba(0,0,0,0.25);
+              background: var(--glass);
+              backdrop-filter: blur(18px) saturate(120%);
+              -webkit-backdrop-filter: blur(18px) saturate(120%);
+              transition:
+                transform 220ms ease,
+                border-color 220ms ease,
+                background 220ms ease;
             }
 
             .stat {
               min-height: 112px;
               padding: 16px;
+              animation: fadeUp 520ms ease both;
+            }
+
+            .stat:nth-child(2) { animation-delay: 70ms; }
+            .stat:nth-child(3) { animation-delay: 140ms; }
+            .stat:nth-child(4) { animation-delay: 210ms; }
+
+            .stat:hover,
+            .feature:hover,
+            .endpoint-row:hover {
+              transform: translateY(-4px);
+              border-color: rgba(255,255,255,0.24);
+              background: var(--glass-strong);
             }
 
             .stat strong {
@@ -320,9 +364,8 @@ Home.get('/', (c) => {
             .console {
               align-self: center;
               overflow: hidden;
-              background:
-                linear-gradient(180deg, rgba(255,255,255,0.06), transparent 38%),
-                var(--panel);
+              background: var(--glass-strong);
+              animation: floatPanel 6s ease-in-out infinite;
             }
 
             .console-head {
@@ -380,7 +423,7 @@ Home.get('/', (c) => {
             }
 
             h2 {
-              font-size: clamp(1.85rem, 4vw, 3.15rem);
+              font-size: 3rem;
             }
 
             .section-copy {
@@ -398,6 +441,18 @@ Home.get('/', (c) => {
             .feature {
               min-height: 210px;
               padding: 22px;
+              animation: fadeUp 560ms ease both;
+            }
+
+            .feature:nth-child(2) { animation-delay: 70ms; }
+            .feature:nth-child(3) { animation-delay: 140ms; }
+            .feature:nth-child(4) { animation-delay: 210ms; }
+            .feature:nth-child(5) { animation-delay: 280ms; }
+            .feature:nth-child(6) { animation-delay: 350ms; }
+
+            .hero > div,
+            .section-head {
+              animation: fadeUp 560ms ease both;
             }
 
             .feature-badge {
@@ -447,7 +502,7 @@ Home.get('/', (c) => {
               padding: 5px 0;
               text-align: center;
               color: #081014;
-              background: var(--green);
+              background: #f3f6ff;
               font-size: 0.78rem;
               font-weight: 900;
             }
@@ -480,6 +535,9 @@ Home.get('/', (c) => {
                 grid-template-columns: 1fr;
                 padding-top: 42px;
               }
+
+              h1 { font-size: 3.5rem; }
+              h2 { font-size: 2.35rem; }
 
               .stats,
               .feature-grid {
@@ -514,6 +572,21 @@ Home.get('/', (c) => {
                 grid-template-columns: 1fr;
                 align-items: start;
               }
+
+              h1 { font-size: 2.45rem; }
+              h2 { font-size: 2rem; }
+              .lead { font-size: 1rem; }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+              *,
+              *::before,
+              *::after {
+                animation-duration: 1ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 1ms !important;
+              }
             }`
           }}
         />
@@ -539,11 +612,11 @@ Home.get('/', (c) => {
         <main>
           <section class="section hero">
             <div>
-              <span class="eyebrow">Unofficial + Vercel Ready</span>
+              <span class="eyebrow">Unofficial + No App Rate Limit</span>
               <h1>Build faster with the ShnwazDev JioSaavn API</h1>
               <p class="lead">
                 Access search, songs, albums, artists, playlists, and recommendations through a simple TypeScript API
-                with clean JSON responses, OpenAPI docs, and a health endpoint for production hosting.
+                with clean JSON responses, OpenAPI docs, a health endpoint, and no app-level request limiter.
               </p>
               <div class="actions">
                 <a class="button primary" href="/docs">
@@ -554,6 +627,9 @@ Home.get('/', (c) => {
                 </a>
                 <a class="button secondary" href="/api/endpoints">
                   Endpoint Index
+                </a>
+                <a class="button secondary" href="/api/limits">
+                  API Limits
                 </a>
               </div>
 
@@ -605,7 +681,7 @@ Home.get('/', (c) => {
                   <span class="key">"results"</span>
                   {`: [...] }\n  }\n}`}
                   {`\n\n`}
-                  <span class="note">Docs: /docs Schema: /swagger Health: /health</span>
+                  <span class="note">Docs: /docs Schema: /swagger Limits: /api/limits</span>
                 </code>
               </pre>
             </aside>

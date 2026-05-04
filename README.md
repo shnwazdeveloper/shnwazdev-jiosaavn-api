@@ -11,10 +11,12 @@ The app uses Hono, TypeScript, Zod OpenAPI, and Scalar docs. It is ready for Ver
 - OpenAPI schema: `/swagger`
 - Health: `/health`
 - Endpoint index: `/api/endpoints`
+- API limits: `/api/limits`
 
 ## API Endpoints
 
 - `GET /api/search?query=Believer`
+- `GET /api/limits`
 - `GET /api/search/songs?query=Kesariya`
 - `GET /api/search/albums?query=Evolve`
 - `GET /api/search/artists?query=Adele`
@@ -60,6 +62,8 @@ https://vercel.com/new/clone?repository-url=https://github.com/shnwazdeveloper/s
 ```
 
 The project exports the Hono app from `src/server.ts`, which Vercel detects as a backend entrypoint.
+
+This app does not add a rate limiter. The Vercel `maxDuration` is configured at 60 seconds where your plan allows it.
 
 ## Repository
 

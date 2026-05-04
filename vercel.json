@@ -1,6 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["bom1"],
+  "functions": {
+    "src/index.ts": {
+      "maxDuration": 60
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
@@ -20,6 +25,10 @@
         {
           "key": "Cache-Control",
           "value": "s-maxage=300, stale-while-revalidate"
+        },
+        {
+          "key": "X-App-RateLimit",
+          "value": "none"
         },
         {
           "key": "Author",

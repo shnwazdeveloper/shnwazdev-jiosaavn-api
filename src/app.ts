@@ -10,11 +10,17 @@ import type { HTTPException } from 'hono/http-exception'
 const API_NAME = 'ShnwazDev JioSaavn API'
 const API_OWNER = 'shnwazdev'
 const API_REPOSITORY = 'https://github.com/shnwazdeveloper/shnwazdev-jiosaavn-api'
+const API_LIMITS = {
+  appRateLimit: 'none',
+  requestWindow: 'unlimited by the app',
+  hostLimits: 'Vercel plan and upstream JioSaavn availability can still apply.'
+}
 
 const ENDPOINTS: Array<{ method: string; path: string; description: string }> = [
   { method: 'GET', path: '/health', description: 'Health check for monitors and Vercel uptime checks.' },
   { method: 'GET', path: '/api', description: 'API metadata with documentation and OpenAPI links.' },
   { method: 'GET', path: '/api/endpoints', description: 'Machine-readable list of available API endpoints.' },
+  { method: 'GET', path: '/api/limits', description: 'API limit metadata for clients and dashboards.' },
   { method: 'GET', path: '/api/search?query={query}', description: 'Search songs, albums, artists, and playlists.' },
   { method: 'GET', path: '/api/search/songs?query={query}', description: 'Search songs with pagination.' },
   { method: 'GET', path: '/api/search/albums?query={query}', description: 'Search albums with pagination.' },
@@ -35,6 +41,12 @@ const EndpointModel = z.object({
   method: z.string().openapi({ example: 'GET' }),
   path: z.string().openapi({ example: '/api/search?query=Believer' }),
   description: z.string().openapi({ example: 'Search songs, albums, artists, and playlists.' })
+})
+
+const LimitModel = z.object({
+  appRateLimit: z.string().openapi({ example: 'none' }),
+  requestWindow: z.string().openapi({ example: 'unlimited by the app' }),
+  hostLimits: z.string().openapi({ example: 'Vercel plan and upstream JioSaavn availability can still apply.' })
 })
 
 export class App {
@@ -113,6 +125,32 @@ export class App {
       (ctx) => ctx.json({ success: true, data: ENDPOINTS })
     )
 
+    this.app.openapi(
+      createRoute({
+        method: 'get',
+        path: '/api/limits',
+        tags: ['Meta'],
+        summary: 'Show API limits',
+        description:
+          'Returns limit metadata. This project does not add an app-level rate limiter; provider and upstream limits can still apply.',
+        operationId: 'showLimits',
+        responses: {
+          200: {
+            description: 'Limit metadata',
+            content: {
+              'application/json': {
+                schema: z.object({
+                  success: z.boolean().openapi({ example: true }),
+                  data: LimitModel
+                })
+              }
+            }
+          }
+        }
+      }),
+      (ctx) => ctx.json({ success: true, data: API_LIMITS })
+    )
+
     this.app.get('/api', (ctx) => {
       const origin = new URL(ctx.req.url).origin
 
@@ -125,7 +163,9 @@ export class App {
           docs: `${origin}/docs`,
           openapi: `${origin}/swagger`,
           health: `${origin}/health`,
-          endpoints: `${origin}/api/endpoints`
+          endpoints: `${origin}/api/endpoints`,
+          limits: `${origin}/api/limits`,
+          limitPolicy: API_LIMITS
         }
       })
     })
