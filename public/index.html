@@ -272,6 +272,12 @@
         background: rgba(255, 255, 255, 0.06);
       }
 
+      .button:disabled {
+        cursor: progress;
+        opacity: 0.66;
+        transform: none;
+      }
+
       .stats {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -385,6 +391,140 @@
 
       .section {
         padding-block: 64px;
+      }
+
+      .api-key-tab {
+        display: grid;
+        gap: 18px;
+      }
+
+      .tab-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+
+      .tab {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        padding: 0 14px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #edf3ff;
+        font-weight: 850;
+      }
+
+      .tab[aria-selected='true'] {
+        border-color: rgba(97, 212, 255, 0.5);
+        background: rgba(97, 212, 255, 0.13);
+        color: #d8f5ff;
+      }
+
+      .key-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.86fr) minmax(300px, 0.64fr);
+        gap: 16px;
+        align-items: stretch;
+      }
+
+      .key-panel,
+      .key-usage {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        background: var(--glass);
+        backdrop-filter: blur(18px) saturate(120%);
+        -webkit-backdrop-filter: blur(18px) saturate(120%);
+      }
+
+      .key-panel,
+      .key-usage {
+        padding: 20px;
+      }
+
+      .key-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+
+      .key-state {
+        color: var(--green);
+        font-weight: 850;
+      }
+
+      .key-output {
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 8px;
+        padding: 14px;
+        background: rgba(0, 0, 0, 0.18);
+        color: #f8fbff;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .key-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .copy-grid {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .copy-line {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .copy-line code {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.045);
+        color: #dbe8f8;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .copy-button {
+        width: 82px;
+        min-height: 44px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        background: rgba(246, 247, 251, 0.9);
+        color: #101114;
+        font-weight: 900;
+      }
+
+      .key-usage h3 {
+        margin-bottom: 12px;
+        font-size: 1.2rem;
+      }
+
+      .key-usage pre {
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.2);
       }
 
       .section-head {
@@ -547,7 +687,8 @@
         }
 
         .stats,
-        .feature-grid {
+        .feature-grid,
+        .key-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
@@ -579,8 +720,17 @@
         }
 
         .stats,
-        .feature-grid {
+        .feature-grid,
+        .key-grid {
           grid-template-columns: 1fr;
+        }
+
+        .copy-line {
+          grid-template-columns: 1fr;
+        }
+
+        .copy-button {
+          width: 100%;
         }
 
         .route-row {
@@ -625,6 +775,7 @@
           <span>ShnwazDev JioSaavn API</span>
         </a>
         <nav class="nav" aria-label="Main navigation">
+          <a href="#api-key">API Key</a>
           <a href="/docs">Docs</a>
           <a href="/swagger">OpenAPI</a>
           <a href="/health">Status</a>
@@ -646,6 +797,7 @@
           </p>
           <div class="actions">
             <a class="button primary" href="/docs">Open Docs</a>
+            <a class="button secondary" href="#api-key">Generate API Key</a>
             <a class="button secondary" href="/swagger">View OpenAPI</a>
             <a class="button secondary" href="/api/endpoints">Endpoint Index</a>
             <a class="button secondary" href="/api/limits">API Limits</a>
@@ -690,6 +842,59 @@
 
 <span class="note">Docs: /docs  Schema: /swagger  Limits: /api/limits</span></code></pre>
         </aside>
+      </section>
+
+      <section class="section api-key-tab" id="api-key" data-api-key-panel>
+        <div class="section-head">
+          <div class="tab-list" role="tablist" aria-label="API key tools">
+            <span class="tab" role="tab" aria-selected="true">API Key</span>
+            <a class="tab" role="tab" aria-selected="false" href="/docs">Docs</a>
+            <a class="tab" role="tab" aria-selected="false" href="/swagger">OpenAPI</a>
+          </div>
+          <h2>Generate your API key in real time</h2>
+          <p class="section-copy">
+            Click generate to receive a fresh Saya key from <code>/apikey</code>. Use it on every protected
+            <code>/api/*</code> request.
+          </p>
+        </div>
+
+        <div class="key-grid">
+          <div class="key-panel">
+            <div class="key-toolbar">
+              <span class="key-state" data-key-status>Ready</span>
+              <button class="button primary" type="button" data-generate-key>Generate Key</button>
+            </div>
+            <code class="key-output" id="generated-api-key" data-key-output>Generating...</code>
+            <div class="key-meta">
+              <span>Prefix: <strong>Saya</strong></span>
+              <span>Random number: <strong data-random-output>...</strong></span>
+              <span>Generated: <strong data-generated-at>...</strong></span>
+            </div>
+            <div class="copy-grid" aria-label="Copy API key examples">
+              <div class="copy-line">
+                <code id="copy-header" data-key-template="X-API-Key: {key}">X-API-Key: ...</code>
+                <button class="copy-button" type="button" data-copy-target="#copy-header">Copy</button>
+              </div>
+              <div class="copy-line">
+                <code id="copy-bearer" data-key-template="Authorization: Bearer {key}">Authorization: Bearer ...</code>
+                <button class="copy-button" type="button" data-copy-target="#copy-bearer">Copy</button>
+              </div>
+              <div class="copy-line">
+                <code id="copy-query" data-key-template="?apikey={encodedKey}">?apikey=...</code>
+                <button class="copy-button" type="button" data-copy-target="#copy-query">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="key-usage" aria-label="API key request example">
+            <h3>Use it fast</h3>
+            <pre><code><span class="route">GET /api/search/songs?query=Kesariya</span>
+<span class="key" data-key-template="X-API-Key: {key}">X-API-Key: ...</span>
+
+<span class="note">Or append the key:</span>
+<span class="route" data-key-template="/api/search/songs?query=Kesariya&amp;apikey={encodedKey}">/api/search/songs?query=Kesariya&amp;apikey=...</span></code></pre>
+          </aside>
+        </div>
       </section>
 
       <section class="section" id="features">
@@ -1000,5 +1205,69 @@
         shnwazdev repo
       </a>
     </footer>
+    <script>
+      ;(() => {
+        const panel = document.querySelector('[data-api-key-panel]')
+        if (!panel) return
+
+        const keyOutput = panel.querySelector('[data-key-output]')
+        const randomOutput = panel.querySelector('[data-random-output]')
+        const statusOutput = panel.querySelector('[data-key-status]')
+        const generatedAtOutput = panel.querySelector('[data-generated-at]')
+        const generateButton = panel.querySelector('[data-generate-key]')
+        const copyButtons = panel.querySelectorAll('[data-copy-target]')
+
+        const setStatus = (message) => {
+          if (statusOutput) statusOutput.textContent = message
+        }
+
+        const setKey = (apiKey, randomNumber) => {
+          if (keyOutput) keyOutput.textContent = apiKey
+          if (randomOutput) randomOutput.textContent = randomNumber
+          if (generatedAtOutput) generatedAtOutput.textContent = new Date().toLocaleTimeString()
+
+          panel.querySelectorAll('[data-key-template]').forEach((item) => {
+            const template = item.getAttribute('data-key-template') || ''
+            item.textContent = template.replaceAll('{key}', apiKey).replaceAll('{encodedKey}', encodeURIComponent(apiKey))
+          })
+        }
+
+        const generateKey = async () => {
+          if (generateButton) generateButton.setAttribute('disabled', 'true')
+          setStatus('Generating...')
+
+          try {
+            const response = await fetch('/apikey', { cache: 'no-store' })
+            if (!response.ok) throw new Error('Request failed')
+
+            const body = await response.json()
+            setKey(body.data.apiKey, body.data.randomNumber)
+            setStatus('Ready')
+          } catch {
+            setStatus('Try again')
+          } finally {
+            if (generateButton) generateButton.removeAttribute('disabled')
+          }
+        }
+
+        copyButtons.forEach((button) => {
+          button.addEventListener('click', async () => {
+            const target = panel.querySelector(button.getAttribute('data-copy-target') || '')
+            const value = target ? target.textContent.trim() : ''
+            if (!value) return
+
+            await navigator.clipboard.writeText(value)
+            const original = button.textContent
+            button.textContent = 'Copied'
+            window.setTimeout(() => {
+              button.textContent = original
+            }, 1200)
+          })
+        })
+
+        generateButton?.addEventListener('click', generateKey)
+        generateKey()
+      })()
+    </script>
   </body>
 </html>

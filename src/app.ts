@@ -115,6 +115,7 @@ export class App {
       }),
       (ctx) => {
         const key = createApiKey()
+        ctx.header('Cache-Control', 'no-store, max-age=0')
 
         return ctx.json({
           success: true,

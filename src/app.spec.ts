@@ -9,6 +9,7 @@ describe('App API key routes', () => {
     const body = (await response.json()) as { success: boolean; data: { apiKey: string; randomNumber: string } }
 
     expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-store, max-age=0')
     expect(body.success).toBe(true)
     expect(body.data.apiKey).toMatch(/^Saya-\d{9}-[a-z0-9]+-[\w-]{24}$/)
     expect(body.data.randomNumber).toMatch(/^\d{9}$/)

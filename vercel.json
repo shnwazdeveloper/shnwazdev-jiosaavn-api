@@ -22,6 +22,10 @@
       "destination": "/api"
     },
     {
+      "source": "/apikey",
+      "destination": "/api"
+    },
+    {
       "source": "/docs",
       "destination": "/api"
     },
