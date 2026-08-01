@@ -1,5 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { apiReference } from '@scalar/hono-api-reference'
+import { createApiKey, isValidApiKey } from '#common/helpers'
 import { ExtendedEndpointList } from '#modules/extended/controllers'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
@@ -18,6 +19,7 @@ const API_LIMITS = {
 }
 
 const BASE_ENDPOINTS: Array<{ method: string; path: string; description: string }> = [
+  { method: 'GET', path: '/apikey', description: 'Generate a public Saya API key for protected API routes.' },
   { method: 'GET', path: '/health', description: 'Health check for monitors and Vercel uptime checks.' },
   { method: 'GET', path: '/api', description: 'API metadata with documentation and OpenAPI links.' },
   { method: 'GET', path: '/api/endpoints', description: 'Machine-readable list of available API endpoints.' },
@@ -52,6 +54,18 @@ const LimitModel = z.object({
   hostLimits: z.string().openapi({ example: 'Vercel plan and upstream JioSaavn availability can still apply.' })
 })
 
+const ApiKeyModel = z.object({
+  apiKey: z.string().openapi({ example: 'Saya-123456789-lz88w2-randomSignatureValue' }),
+  prefix: z.string().openapi({ example: 'Saya' }),
+  randomNumber: z.string().openapi({ example: '123456789' }),
+  issuedAt: z.string().openapi({ example: 'lz88w2' }),
+  usage: z.object({
+    header: z.string().openapi({ example: 'X-API-Key: Saya-123456789-lz88w2-randomSignatureValue' }),
+    bearer: z.string().openapi({ example: 'Authorization: Bearer Saya-123456789-lz88w2-randomSignatureValue' }),
+    query: z.string().openapi({ example: '?apikey=Saya-123456789-lz88w2-randomSignatureValue' })
+  })
+})
+
 export class App {
   private app: OpenAPIHono
 
@@ -59,6 +73,7 @@ export class App {
     this.app = new OpenAPIHono()
 
     this.initializeGlobalMiddlewares()
+    this.initializeApiKeyMiddleware()
     this.initializeRoutes(routes)
     this.initializeUtilityRoutes()
     this.initializeSwaggerUI()
@@ -76,6 +91,45 @@ export class App {
   }
 
   private initializeUtilityRoutes() {
+    this.app.openapi(
+      createRoute({
+        method: 'get',
+        path: '/apikey',
+        tags: ['Meta'],
+        summary: 'Generate API key',
+        description: 'Generates a fast Saya API key that can be used with protected /api routes.',
+        operationId: 'generateApiKey',
+        responses: {
+          200: {
+            description: 'Generated API key',
+            content: {
+              'application/json': {
+                schema: z.object({
+                  success: z.boolean().openapi({ example: true }),
+                  data: ApiKeyModel
+                })
+              }
+            }
+          }
+        }
+      }),
+      (ctx) => {
+        const key = createApiKey()
+
+        return ctx.json({
+          success: true,
+          data: {
+            ...key,
+            usage: {
+              header: `X-API-Key: ${key.apiKey}`,
+              bearer: `Authorization: Bearer ${key.apiKey}`,
+              query: `?apikey=${key.apiKey}`
+            }
+          }
+        })
+      }
+    )
+
     this.app.openapi(
       createRoute({
         method: 'get',
@@ -166,6 +220,7 @@ export class App {
           docs: `${origin}/docs`,
           openapi: `${origin}/swagger`,
           health: `${origin}/health`,
+          apiKey: `${origin}/apikey`,
           endpoints: `${origin}/api/endpoints`,
           limits: `${origin}/api/limits`,
           limitPolicy: API_LIMITS
@@ -178,6 +233,26 @@ export class App {
     this.app.use(logger())
     this.app.use(prettyJSON())
     this.app.use(cors())
+  }
+
+  private initializeApiKeyMiddleware() {
+    this.app.use('/api/*', async (ctx, next) => {
+      const authHeader = ctx.req.header('authorization')
+      const bearerKey = authHeader?.toLowerCase().startsWith('bearer ') ? authHeader.slice(7).trim() : undefined
+      const apiKey = ctx.req.header('x-api-key') || bearerKey || ctx.req.query('apikey') || ctx.req.query('apiKey')
+
+      if (!isValidApiKey(apiKey)) {
+        return ctx.json(
+          {
+            success: false,
+            message: 'valid API key required, generate one at /apikey'
+          },
+          401
+        )
+      }
+
+      await next()
+    })
   }
 
   private initializeSwaggerUI() {

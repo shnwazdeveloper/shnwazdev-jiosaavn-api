@@ -3,6 +3,8 @@ export default {
   language: 'en',
   words: [
     'saavn',
+    'Saya',
+    'apikey',
     'sumit',
     'kolhe',
     'shnwaz',
