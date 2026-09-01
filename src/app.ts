@@ -1,14 +1,5 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { apiReference } from '@scalar/hono-api-reference'
-import {
-  createApiKey,
-  isValidApiKey,
-  revokeApiKey,
-  unrevokeApiKey,
-  isApiKeyRevoked,
-  verifyAdminSecret,
-  listAllAdminKeys
-} from '#common/helpers'
 import { ExtendedEndpointList } from '#modules/extended/controllers'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
@@ -27,11 +18,6 @@ const API_LIMITS = {
 }
 
 const BASE_ENDPOINTS: Array<{ method: string; path: string; description: string }> = [
-  { method: 'GET', path: '/apikey', description: 'Generate a public Sh.Qre API key for protected API routes.' },
-  { method: 'POST', path: '/apikey/revoke', description: 'Admin: Revoke an existing API key.' },
-  { method: 'GET', path: '/apikey/validate?key={key}', description: 'Check if an API key is valid and active.' },
-  { method: 'GET', path: '/api/admin/keys', description: 'Admin: List all registered API keys.' },
-  { method: 'POST', path: '/api/admin/unrevoke', description: 'Admin: Restore a revoked API key.' },
   { method: 'GET', path: '/health', description: 'Health check for monitors and uptime checks.' },
   { method: 'GET', path: '/api', description: 'API metadata with documentation and OpenAPI links.' },
   { method: 'GET', path: '/api/endpoints', description: 'Machine-readable list of available API endpoints.' },
@@ -66,18 +52,6 @@ const LimitModel = z.object({
   hostLimits: z.string().openapi({ example: 'Cloudflare Workers and upstream JioSaavn availability can still apply.' })
 })
 
-const ApiKeyModel = z.object({
-  apiKey: z.string().openapi({ example: 'Sh.Qre' }),
-  prefix: z.string().openapi({ example: 'Sh.' }),
-  code: z.string().openapi({ example: 'Qre' }),
-  issuedAt: z.string().openapi({ example: '8:30:00 PM' }),
-  usage: z.object({
-    header: z.string().openapi({ example: 'X-API-Key: Sh.Qre' }),
-    bearer: z.string().openapi({ example: 'Authorization: Bearer Sh.Qre' }),
-    query: z.string().openapi({ example: '?apikey=Sh.Qre' })
-  })
-})
-
 export class App {
   private app: OpenAPIHono
 
@@ -85,7 +59,6 @@ export class App {
     this.app = new OpenAPIHono()
 
     this.initializeGlobalMiddlewares()
-    this.initializeApiKeyMiddleware()
     this.initializeRoutes(routes)
     this.initializeUtilityRoutes()
     this.initializeSwaggerUI()
@@ -103,101 +76,6 @@ export class App {
   }
 
   private initializeUtilityRoutes() {
-    this.app.openapi(
-      createRoute({
-        method: 'get',
-        path: '/apikey',
-        tags: ['Meta'],
-        summary: 'Generate API key',
-        description: 'Generates a fresh Sh.Qre API key for protected /api routes.',
-        operationId: 'generateApiKey',
-        responses: {
-          200: {
-            description: 'Generated API key',
-            content: {
-              'application/json': {
-                schema: z.object({
-                  success: z.boolean().openapi({ example: true }),
-                  data: ApiKeyModel
-                })
-              }
-            }
-          }
-        }
-      }),
-      (ctx) => {
-        const key = createApiKey()
-        ctx.header('Cache-Control', 'no-store, max-age=0')
-
-        return ctx.json({
-          success: true,
-          data: {
-            ...key,
-            usage: {
-              header: `X-API-Key: ${key.apiKey}`,
-              bearer: `Authorization: Bearer ${key.apiKey}`,
-              query: `?apikey=${key.apiKey}`
-            }
-          }
-        })
-      }
-    )
-
-    this.app.post('/apikey/revoke', async (ctx) => {
-      const body = await ctx.req.json().catch(() => ({})) as { apiKey?: string; key?: string; adminSecret?: string; secret?: string }
-      const keyToRevoke = body?.apiKey || body?.key || ctx.req.query('key') || ctx.req.query('apikey')
-      const adminSecret = body?.adminSecret || body?.secret || ctx.req.header('x-admin-secret') || ctx.req.query('secret')
-
-      if (!verifyAdminSecret(adminSecret)) {
-        return ctx.json({ success: false, message: 'Unauthorized: Admin secret required to revoke keys' }, 403)
-      }
-
-      if (!keyToRevoke) {
-        return ctx.json({ success: false, message: 'apiKey parameter is required' }, 400)
-      }
-
-      revokeApiKey(keyToRevoke)
-      return ctx.json({ success: true, message: 'API key revoked successfully by admin', apiKey: keyToRevoke })
-    })
-
-    this.app.get('/apikey/validate', (ctx) => {
-      const key = ctx.req.query('key') || ctx.req.query('apikey') || ctx.req.header('x-api-key')
-      if (!key) {
-        return ctx.json({ success: false, valid: false, message: 'Missing key parameter' }, 400)
-      }
-
-      const valid = isValidApiKey(key)
-      const revoked = isApiKeyRevoked(key)
-
-      return ctx.json({
-        success: true,
-        valid: valid && !revoked,
-        revoked,
-        apiKey: key
-      })
-    })
-
-    this.app.get('/api/admin/keys', (ctx) => {
-      const adminSecret = ctx.req.header('x-admin-secret') || ctx.req.query('secret')
-      if (!verifyAdminSecret(adminSecret)) {
-        return ctx.json({ success: false, message: 'Unauthorized' }, 403)
-      }
-      return ctx.json({ success: true, data: listAllAdminKeys() })
-    })
-
-    this.app.post('/api/admin/unrevoke', async (ctx) => {
-      const body = await ctx.req.json().catch(() => ({})) as { apiKey?: string; key?: string; adminSecret?: string; secret?: string }
-      const key = body?.apiKey || body?.key || ctx.req.query('key')
-      const adminSecret = body?.adminSecret || body?.secret || ctx.req.header('x-admin-secret') || ctx.req.query('secret')
-      if (!verifyAdminSecret(adminSecret)) {
-        return ctx.json({ success: false, message: 'Unauthorized' }, 403)
-      }
-      if (!key) {
-        return ctx.json({ success: false, message: 'apiKey is required' }, 400)
-      }
-      unrevokeApiKey(key)
-      return ctx.json({ success: true, message: 'Key restored successfully', apiKey: key })
-    })
 
     this.app.openapi(
       createRoute({
@@ -302,31 +180,6 @@ export class App {
     this.app.use(logger())
     this.app.use(prettyJSON())
     this.app.use(cors())
-  }
-
-  private initializeApiKeyMiddleware() {
-    this.app.use('/api/*', async (ctx, next) => {
-      if (ctx.req.path.startsWith('/api/admin')) {
-        await next()
-        return
-      }
-
-      const authHeader = ctx.req.header('authorization')
-      const bearerKey = authHeader?.toLowerCase().startsWith('bearer ') ? authHeader.slice(7).trim() : undefined
-      const apiKey = ctx.req.header('x-api-key') || bearerKey || ctx.req.query('apikey') || ctx.req.query('apiKey')
-
-      if (!isValidApiKey(apiKey)) {
-        return ctx.json(
-          {
-            success: false,
-            message: 'valid API key required, generate one at /apikey'
-          },
-          401
-        )
-      }
-
-      await next()
-    })
   }
 
   private initializeSwaggerUI() {
