@@ -4,8 +4,9 @@ export const Home = new Hono()
 
 const API_NAME = 'ShnwazDev JioSaavn API'
 const REPOSITORY_URL = 'https://github.com/shnwazdeveloper/shnwazdev-jiosaavn-api'
+const CUSTOM_DOMAIN = 'Sh.Jio.dev'
 const DESCRIPTION =
-  'ShnwazDev JioSaavn API is an unofficial TypeScript API for songs, albums, artists, playlists, search, and recommendations.'
+  'ShnwazDev JioSaavn API is an ultra-fast TypeScript API for songs, albums, artists, playlists, search, and recommendations on Cloudflare Workers.'
 
 type RouteItem = {
   method: string
@@ -21,60 +22,60 @@ type RouteGroup = {
 
 const features = [
   {
-    label: 'S',
-    title: 'Search Engine',
-    body: 'Global and scoped search routes for songs, albums, artists, playlists, and top-query results.'
+    label: '⚡',
+    title: 'Cloudflare Edge',
+    body: 'Deployed globally on Cloudflare Workers with minimal latency and instant cold starts.'
   },
   {
-    label: 'B',
-    title: 'Browse Feeds',
-    body: 'Home, charts, channels, genres, moods, music plus, radio, city modules, and editorial promos.'
+    label: '🔑',
+    title: 'Sh. Key Generator',
+    body: 'Generate, test, manage, and revoke unique Sh. API keys with 3-digit randomized identifiers.'
   },
   {
-    label: 'K',
-    title: 'API Key Tab',
-    body: 'Generate a fresh Saya key from the website and use it on every protected /api route.'
+    label: '🎵',
+    title: '320kbps Hi-Fi Audio',
+    body: 'Direct decrypted streaming and high-bitrate download links (320kbps, 160kbps, 96kbps, 48kbps).'
   },
   {
-    label: 'V',
-    title: 'Vercel Ready',
-    body: 'The API runs through a native Vercel serverless function entry and ships compiled TypeScript files.'
+    label: '🔍',
+    title: 'Global Search',
+    body: 'Search across songs, albums, artists, playlists, and top-query suggestions in real time.'
   },
   {
-    label: 'O',
-    title: 'OpenAPI 3.1',
-    body: 'Interactive documentation and a generated schema are available from the same deployment.'
+    label: '📜',
+    title: 'Synced Lyrics',
+    body: 'Fetch rich synchronized time-stamped lyrics, artist recommendations, and podcast episodes.'
   },
   {
-    label: 'L',
-    title: 'Lyrics + Podcasts',
-    body: 'Lyrics, synced lyrics, podcast shows, episodes, trending data, and share/ringtone utilities.'
+    label: '📖',
+    title: 'OpenAPI 3.1 & Scalar',
+    body: 'Interactive Swagger and Scalar API documentation generated automatically.'
   }
 ]
 
 const stats = [
-  ['47 Music Routes', 'Albums, artists, browse, lyrics, playlists, podcasts, search, songs, and trending'],
-  ['No App Limit', 'No app rate limiter is installed in the project'],
-  ['OpenAPI 3.1', 'Schema generated from the deployed routes'],
-  ['Vercel Native', 'Single serverless function for website and API']
+  ['47+ Music Routes', 'Albums, artists, browse, lyrics, playlists, podcasts, search, songs, trending'],
+  ['Cloudflare Workers', 'Global Edge network on custom domain Sh.Jio.dev'],
+  ['Sh. API Keys', 'Signed secure tokens with 3-digit random codes & revocation'],
+  ['OpenAPI 3.1', 'Interactive Scalar docs and Swagger JSON schema']
 ]
 
 const routeGroups: RouteGroup[] = [
   {
     name: 'Album',
     count: 1,
-    routes: [{ method: 'GET', path: '/api/albums', description: 'Retrieve an album by ID or link' }]
+    routes: [{ method: 'GET', path: '/api/albums?id={id}', description: 'Retrieve an album by ID or link' }]
   },
   {
     name: 'Artists',
     count: 6,
     routes: [
-      { method: 'GET', path: '/api/artists', description: 'Retrieve artists by ID or link' },
+      { method: 'GET', path: '/api/artists?id={id}', description: 'Retrieve artists by ID or link' },
       { method: 'GET', path: '/api/artists/{id}', description: 'Retrieve artist by ID' },
       { method: 'GET', path: '/api/artists/{id}/albums', description: "Retrieve artist's albums" },
       { method: 'GET', path: '/api/artists/{id}/related', description: 'Retrieve related artists' },
       { method: 'GET', path: '/api/artists/{id}/songs', description: "Retrieve artist's songs" },
-      { method: 'GET', path: '/api/artists/by-name', description: 'Retrieve artist by name' }
+      { method: 'GET', path: '/api/artists/by-name?name={name}', description: 'Retrieve artist by name' }
     ]
   },
   {
@@ -87,18 +88,14 @@ const routeGroups: RouteGroup[] = [
       { method: 'GET', path: '/api/discover', description: 'Retrieve discover channels' },
       { method: 'GET', path: '/api/genres', description: 'Retrieve genre channels' },
       { method: 'GET', path: '/api/home', description: 'Retrieve the JioSaavn home feed' },
-      {
-        method: 'GET',
-        path: '/api/home/artist-recommendations',
-        description: 'Retrieve home artist radio recommendations'
-      },
+      { method: 'GET', path: '/api/home/artist-recommendations', description: 'Retrieve home artist recommendations' },
       { method: 'GET', path: '/api/home/city-modules', description: 'Retrieve home city modules' },
       { method: 'GET', path: '/api/home/modules', description: 'Retrieve home feed module metadata' },
       { method: 'GET', path: '/api/home/promos', description: 'Retrieve editorial promo groups' },
       { method: 'GET', path: '/api/moods', description: 'Retrieve mood channels' },
       { method: 'GET', path: '/api/music-plus', description: 'Retrieve music plus channels' },
       { method: 'GET', path: '/api/radio', description: 'Retrieve radio stations' },
-      { method: 'GET', path: '/api/radio/{id}', description: 'Retrieve a radio station detail payload' },
+      { method: 'GET', path: '/api/radio/{id}', description: 'Retrieve radio station detail payload' },
       { method: 'GET', path: '/api/radio/artists', description: 'Retrieve artist radio recommendations' },
       { method: 'GET', path: '/api/radio/featured', description: 'Retrieve featured radio stations' }
     ]
@@ -107,7 +104,7 @@ const routeGroups: RouteGroup[] = [
     name: 'Lyrics',
     count: 3,
     routes: [
-      { method: 'GET', path: '/api/lyrics', description: 'Retrieve lyrics by song name' },
+      { method: 'GET', path: '/api/lyrics?query={query}', description: 'Retrieve lyrics by song name' },
       { method: 'GET', path: '/api/lyrics/{id}', description: 'Retrieve lyrics by song or lyrics ID' },
       { method: 'GET', path: '/api/lyrics/{id}/sync', description: 'Retrieve synced lyrics payload' }
     ]
@@ -115,34 +112,34 @@ const routeGroups: RouteGroup[] = [
   {
     name: 'Playlist',
     count: 1,
-    routes: [{ method: 'GET', path: '/api/playlists', description: 'Retrieve a playlist by ID or link' }]
+    routes: [{ method: 'GET', path: '/api/playlists?id={id}', description: 'Retrieve a playlist by ID or link' }]
   },
   {
     name: 'Podcasts',
     count: 3,
     routes: [
       { method: 'GET', path: '/api/episodes/{id}', description: 'Retrieve a podcast episode by ID' },
-      { method: 'GET', path: '/api/podcasts', description: 'Retrieve a podcast by show ID, token, link, or query' },
-      { method: 'GET', path: '/api/podcasts/{id}', description: 'Retrieve a podcast by ID or token' }
+      { method: 'GET', path: '/api/podcasts?id={id}', description: 'Retrieve podcast show by ID or link' },
+      { method: 'GET', path: '/api/podcasts/{id}', description: 'Retrieve podcast show detail' }
     ]
   },
   {
     name: 'Search',
     count: 6,
     routes: [
-      { method: 'GET', path: '/api/search', description: 'Global search' },
-      { method: 'GET', path: '/api/search/albums', description: 'Search for albums' },
-      { method: 'GET', path: '/api/search/artists', description: 'Search for artists' },
-      { method: 'GET', path: '/api/search/playlists', description: 'Search for playlists' },
-      { method: 'GET', path: '/api/search/songs', description: 'Search for songs' },
-      { method: 'GET', path: '/api/search/top-query', description: 'Search for the top query bucket' }
+      { method: 'GET', path: '/api/search?query={query}', description: 'Global search' },
+      { method: 'GET', path: '/api/search/albums?query={query}', description: 'Search for albums' },
+      { method: 'GET', path: '/api/search/artists?query={query}', description: 'Search for artists' },
+      { method: 'GET', path: '/api/search/playlists?query={query}', description: 'Search for playlists' },
+      { method: 'GET', path: '/api/search/songs?query={query}', description: 'Search for songs' },
+      { method: 'GET', path: '/api/search/top-query?query={query}', description: 'Search top query bucket' }
     ]
   },
   {
     name: 'Songs',
     count: 5,
     routes: [
-      { method: 'GET', path: '/api/songs', description: 'Retrieve songs by ID or link' },
+      { method: 'GET', path: '/api/songs?ids={ids}', description: 'Retrieve songs by ID or link' },
       { method: 'GET', path: '/api/songs/{id}', description: 'Retrieve song by ID' },
       { method: 'GET', path: '/api/songs/{id}/ringtone', description: 'Retrieve ringtone preview details' },
       { method: 'GET', path: '/api/songs/{id}/share', description: 'Retrieve a shareable song link' },
@@ -163,81 +160,6 @@ const routeGroups: RouteGroup[] = [
   }
 ]
 
-const exampleJson = `{
-  "success": true,
-  "data": {
-    "songs": { "results": [...] },
-    "albums": { "results": [...] },
-    "artists": { "results": [...] },
-    "playlists": { "results": [...] }
-  }
-}`
-
-const apiKeyScript = `
-(() => {
-  const panel = document.querySelector('[data-api-key-panel]')
-  if (!panel) return
-
-  const keyOutput = panel.querySelector('[data-key-output]')
-  const randomOutput = panel.querySelector('[data-random-output]')
-  const statusOutput = panel.querySelector('[data-key-status]')
-  const generatedAtOutput = panel.querySelector('[data-generated-at]')
-  const generateButton = panel.querySelector('[data-generate-key]')
-  const copyButtons = panel.querySelectorAll('[data-copy-target]')
-
-  const setStatus = (message) => {
-    if (statusOutput) statusOutput.textContent = message
-  }
-
-  const setKey = (apiKey, randomNumber) => {
-    if (keyOutput) keyOutput.textContent = apiKey
-    if (randomOutput) randomOutput.textContent = randomNumber
-    if (generatedAtOutput) generatedAtOutput.textContent = new Date().toLocaleTimeString()
-
-    panel.querySelectorAll('[data-key-template]').forEach((item) => {
-      const template = item.getAttribute('data-key-template') || ''
-      item.textContent = template.replaceAll('{key}', apiKey).replaceAll('{encodedKey}', encodeURIComponent(apiKey))
-    })
-  }
-
-  const generateKey = async () => {
-    if (generateButton) generateButton.setAttribute('disabled', 'true')
-    setStatus('Generating...')
-
-    try {
-      const response = await fetch('/apikey', { cache: 'no-store' })
-      if (!response.ok) throw new Error('Request failed')
-
-      const body = await response.json()
-      setKey(body.data.apiKey, body.data.randomNumber)
-      setStatus('Ready')
-    } catch {
-      setStatus('Try again')
-    } finally {
-      if (generateButton) generateButton.removeAttribute('disabled')
-    }
-  }
-
-  copyButtons.forEach((button) => {
-    button.addEventListener('click', async () => {
-      const target = panel.querySelector(button.getAttribute('data-copy-target') || '')
-      const value = target ? target.textContent.trim() : ''
-      if (!value) return
-
-      await navigator.clipboard.writeText(value)
-      const original = button.textContent
-      button.textContent = 'Copied'
-      window.setTimeout(() => {
-        button.textContent = original
-      }, 1200)
-    })
-  })
-
-  generateButton?.addEventListener('click', generateKey)
-  generateKey()
-})()
-`
-
 const escapeHtml = (value: string) =>
   value
     .replaceAll('&', '&amp;')
@@ -250,9 +172,9 @@ const renderStats = () =>
   stats
     .map(
       ([title, body]) => `
-        <div class="stat">
-          <strong>${escapeHtml(title)}</strong>
-          <span>${escapeHtml(body)}</span>
+        <div class="stat-card">
+          <div class="stat-title">${escapeHtml(title)}</div>
+          <div class="stat-desc">${escapeHtml(body)}</div>
         </div>`
     )
     .join('')
@@ -261,11 +183,11 @@ const renderFeatures = () =>
   features
     .map(
       (feature) => `
-        <article class="feature">
-          <span class="feature-badge">${escapeHtml(feature.label)}</span>
-          <h3>${escapeHtml(feature.title)}</h3>
-          <p>${escapeHtml(feature.body)}</p>
-        </article>`
+        <div class="feature-card">
+          <div class="feature-icon">${escapeHtml(feature.label)}</div>
+          <h3 class="feature-title">${escapeHtml(feature.title)}</h3>
+          <p class="feature-body">${escapeHtml(feature.body)}</p>
+        </div>`
     )
     .join('')
 
@@ -273,869 +195,1051 @@ const renderRouteGroups = () =>
   routeGroups
     .map(
       (group) => `
-        <section class="route-group" aria-labelledby="route-${escapeHtml(group.name.toLowerCase())}">
-          <div class="route-head">
-            <h3 id="route-${escapeHtml(group.name.toLowerCase())}">${escapeHtml(group.name)}</h3>
-            <span>${group.count}</span>
+        <div class="route-group" data-group="${escapeHtml(group.name.toLowerCase())}">
+          <div class="route-group-header">
+            <h3>${escapeHtml(group.name)}</h3>
+            <span class="badge">${group.count} ${group.count === 1 ? 'route' : 'routes'}</span>
           </div>
-          <div class="route-list">
+          <div class="route-table">
             ${group.routes
               .map(
                 (route) => `
-                  <a class="route-row" href="${escapeHtml(route.path.replaceAll('{id}', 'id'))}">
-                    <span class="method">${escapeHtml(route.method)}</span>
-                    <code>${escapeHtml(route.path)}</code>
-                    <span>${escapeHtml(route.description)}</span>
-                  </a>`
+                  <div class="route-row">
+                    <span class="method-tag ${escapeHtml(route.method.toLowerCase())}">${escapeHtml(route.method)}</span>
+                    <code class="route-path">${escapeHtml(route.path)}</code>
+                    <span class="route-desc">${escapeHtml(route.description)}</span>
+                  </div>`
               )
               .join('')}
           </div>
-        </section>`
+        </div>`
     )
     .join('')
+
+const clientScript = `
+(() => {
+  var tabButtons = document.querySelectorAll('[data-tab-target]');
+  var tabPanels = document.querySelectorAll('[data-tab-panel]');
+
+  function switchTab(targetId) {
+    tabButtons.forEach(function(btn) {
+      var active = btn.getAttribute('data-tab-target') === targetId;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    tabPanels.forEach(function(panel) {
+      panel.classList.toggle('active', panel.id === targetId);
+    });
+    if (history.replaceState) {
+      history.replaceState(null, '', '#' + targetId);
+    }
+  }
+
+  tabButtons.forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      switchTab(btn.getAttribute('data-tab-target'));
+    });
+  });
+
+  if (window.location.hash) {
+    var hash = window.location.hash.replace('#', '');
+    if (document.getElementById(hash)) {
+      switchTab(hash);
+    }
+  }
+
+  var STORAGE_KEY = 'shnwaz_api_keys_v1';
+  function getStoredKeys() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveStoredKeys(keys) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(keys));
+  }
+
+  var activeApiKey = '';
+  var keyOutput = document.getElementById('gen-key-display');
+  var codeBadge = document.getElementById('gen-3digit-badge');
+  var statusBadge = document.getElementById('gen-status-badge');
+  var timeBadge = document.getElementById('gen-time-badge');
+  var generateBtn = document.getElementById('btn-generate-key');
+  var keysTableBody = document.getElementById('keys-table-body');
+
+  function updateSnippetTemplates(key) {
+    activeApiKey = key;
+    document.querySelectorAll('[data-snippet-key]').forEach(function(el) {
+      var template = el.getAttribute('data-snippet-key');
+      el.textContent = template.split('{key}').join(key || 'Sh.000-XXXXXXXXX-XXXXXX-XXXXXX');
+    });
+  }
+
+  function renderKeysTable() {
+    if (!keysTableBody) return;
+    var keys = getStoredKeys();
+    if (keys.length === 0) {
+      keysTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 24px;">No API keys generated yet. Click "Generate New Sh. Key" above!</td></tr>';
+      return;
+    }
+
+    var html = '';
+    for (var i = 0; i < keys.length; i++) {
+      var item = keys[i];
+      var rowClass = item.revoked ? 'revoked-row' : '';
+      var badgeClass = item.revoked ? 'badge-revoked' : 'badge-active';
+      var badgeText = item.revoked ? 'Revoked' : 'Active';
+      var revokeOrDelete = !item.revoked
+        ? '<button class="btn-sm btn-danger" onclick="window.revokeKey(' + JSON.stringify(item.apiKey) + ')">Revoke</button>'
+        : '<button class="btn-sm btn-outline" onclick="window.removeKey(' + JSON.stringify(item.apiKey) + ')">Delete</button>';
+
+      html += '<tr class="' + rowClass + '">' +
+        '<td><span class="code-badge">' + (item.code3Digit || '---') + '</span></td>' +
+        '<td><code class="table-key-text">' + item.apiKey + '</code></td>' +
+        '<td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>' +
+        '<td style="color: var(--muted); font-size: 12px;">' + (item.createdAt || 'Recent') + '</td>' +
+        '<td class="action-cell">' +
+          '<button class="btn-sm btn-secondary" onclick="window.copyText(' + JSON.stringify(item.apiKey) + ', this)">Copy</button>' +
+          revokeOrDelete +
+          '<button class="btn-sm btn-primary" onclick="window.testLiveKey(' + JSON.stringify(item.apiKey) + ')">Test</button>' +
+        '</td>' +
+      '</tr>';
+    }
+    keysTableBody.innerHTML = html;
+  }
+
+  async function generateNewKey() {
+    if (generateBtn) generateBtn.disabled = true;
+    if (statusBadge) statusBadge.textContent = 'Generating...';
+
+    try {
+      var res = await fetch('/apikey', { cache: 'no-store' });
+      var json = await res.json();
+      if (json.success && json.data) {
+        var keyData = json.data;
+        if (keyOutput) keyOutput.textContent = keyData.apiKey;
+        if (codeBadge) codeBadge.textContent = '3-Digit Code: ' + (keyData.code3Digit || 'Sh');
+        if (statusBadge) {
+          statusBadge.textContent = 'Active';
+          statusBadge.className = 'badge badge-active';
+        }
+        if (timeBadge) timeBadge.textContent = new Date().toLocaleTimeString();
+
+        updateSnippetTemplates(keyData.apiKey);
+
+        var currentKeys = getStoredKeys();
+        currentKeys.unshift({
+          apiKey: keyData.apiKey,
+          code3Digit: keyData.code3Digit,
+          revoked: false,
+          createdAt: new Date().toLocaleTimeString()
+        });
+        saveStoredKeys(currentKeys.slice(0, 20));
+        renderKeysTable();
+      }
+    } catch (err) {
+      if (statusBadge) {
+        statusBadge.textContent = 'Error';
+        statusBadge.className = 'badge badge-revoked';
+      }
+    } finally {
+      if (generateBtn) generateBtn.disabled = false;
+    }
+  }
+
+  window.copyText = async function(text, btn) {
+    if (!text) return;
+    await navigator.clipboard.writeText(text);
+    if (btn) {
+      var orig = btn.textContent;
+      btn.textContent = '✓ Copied';
+      setTimeout(function() { btn.textContent = orig; }, 1200);
+    }
+  };
+
+  window.revokeKey = async function(key) {
+    if (!confirm('Are you sure you want to revoke this API key? It will immediately stop working on all /api routes.')) return;
+    try {
+      await fetch('/apikey/revoke', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: key })
+      });
+      var keys = getStoredKeys();
+      for (var i = 0; i < keys.length; i++) {
+        if (keys[i].apiKey === key) keys[i].revoked = true;
+      }
+      saveStoredKeys(keys);
+      renderKeysTable();
+      alert('Key revoked successfully!');
+    } catch (e) {
+      alert('Failed to revoke key: ' + e.message);
+    }
+  };
+
+  window.removeKey = function(key) {
+    var keys = getStoredKeys().filter(function(k) { return k.apiKey !== key; });
+    saveStoredKeys(keys);
+    renderKeysTable();
+  };
+
+  window.testLiveKey = async function(key) {
+    var outputEl = document.getElementById('test-key-result');
+    if (outputEl) outputEl.innerHTML = '<span style="color: var(--cyan)">Testing ' + key + '...</span>';
+    try {
+      var start = performance.now();
+      var res = await fetch('/api/endpoints', {
+        headers: { 'X-API-Key': key }
+      });
+      var time = Math.round(performance.now() - start);
+      var data = await res.json();
+      if (res.ok) {
+        if (outputEl) outputEl.innerHTML = '<span style="color: var(--green)">✓ 200 OK (' + time + 'ms) - Key Valid!</span>';
+      } else {
+        if (outputEl) outputEl.innerHTML = '<span style="color: var(--coral)">✗ ' + res.status + ' ' + (data.message || 'Unauthorized') + '</span>';
+      }
+    } catch (err) {
+      if (outputEl) outputEl.innerHTML = '<span style="color: var(--coral)">✗ Network error: ' + err.message + '</span>';
+    }
+  };
+
+  if (generateBtn) generateBtn.addEventListener('click', generateNewKey);
+  renderKeysTable();
+
+  if (getStoredKeys().length === 0) {
+    generateNewKey();
+  } else {
+    var first = getStoredKeys()[0];
+    if (keyOutput) keyOutput.textContent = first.apiKey;
+    if (codeBadge) codeBadge.textContent = '3-Digit Code: ' + (first.code3Digit || '---');
+    if (statusBadge) {
+      statusBadge.textContent = first.revoked ? 'Revoked' : 'Active';
+      statusBadge.className = 'badge ' + (first.revoked ? 'badge-revoked' : 'badge-active');
+    }
+    updateSnippetTemplates(first.apiKey);
+  }
+
+  // Interactive Live Explorer & Audio Player
+  var searchInput = document.getElementById('explorer-search-input');
+  var searchBtn = document.getElementById('explorer-search-btn');
+  var searchResults = document.getElementById('explorer-results');
+  var playerCard = document.getElementById('explorer-player-card');
+  var audioEl = document.getElementById('audio-stream-player');
+  var playerArt = document.getElementById('player-art');
+  var playerTitle = document.getElementById('player-title');
+  var playerArtist = document.getElementById('player-artist');
+  var downloadLinksEl = document.getElementById('player-download-links');
+  var jsonViewer = document.getElementById('explorer-json-viewer');
+
+  async function performSearch() {
+    var query = (searchInput && searchInput.value.trim()) || 'Believer';
+    if (!activeApiKey && getStoredKeys().length > 0) {
+      activeApiKey = getStoredKeys()[0].apiKey;
+    }
+
+    if (searchResults) searchResults.innerHTML = '<div style="padding: 20px; color: var(--cyan);">Searching for "' + query + '"...</div>';
+
+    try {
+      var res = await fetch('/api/search/songs?query=' + encodeURIComponent(query), {
+        headers: activeApiKey ? { 'X-API-Key': activeApiKey } : {}
+      });
+      var body = await res.json();
+      if (jsonViewer) jsonViewer.textContent = JSON.stringify(body, null, 2);
+
+      if (body.success && body.data && body.data.results && body.data.results.length > 0) {
+        var resultsHtml = '';
+        var list = body.data.results.slice(0, 6);
+        for (var i = 0; i < list.length; i++) {
+          var song = list[i];
+          var img = (song.image && song.image[song.image.length - 1] && song.image[song.image.length - 1].url) || '';
+          var artist = (song.artists && song.artists.primary && song.artists.primary.map(function(a) { return a.name; }).join(', ')) || 'Unknown Artist';
+          var durationStr = song.duration ? (Math.floor(song.duration / 60) + ':' + (song.duration % 60 < 10 ? '0' : '') + (song.duration % 60)) : '';
+
+          resultsHtml += '<div class="song-card">' +
+            '<img src="' + img + '" alt="' + song.name + '" class="song-art" />' +
+            '<div class="song-info">' +
+              '<div class="song-name">' + song.name + '</div>' +
+              '<div class="song-artist">' + artist + '</div>' +
+              '<div class="song-duration">' + durationStr + (song.year ? ' • ' + song.year : '') + '</div>' +
+            '</div>' +
+            '<div class="song-actions">' +
+              '<button class="btn-sm btn-primary" onclick="window.playSong(' + JSON.stringify(encodeURIComponent(JSON.stringify(song))) + ')">▶ Play 320kbps</button>' +
+            '</div>' +
+          '</div>';
+        }
+        searchResults.innerHTML = resultsHtml;
+      } else {
+        searchResults.innerHTML = '<div style="padding: 20px; color: var(--muted);">No songs found.</div>';
+      }
+    } catch (err) {
+      if (searchResults) searchResults.innerHTML = '<div style="padding: 20px; color: var(--coral);">Error: ' + err.message + '</div>';
+    }
+  }
+
+  window.playSong = function(encoded) {
+    try {
+      var song = JSON.parse(decodeURIComponent(encoded));
+      if (!song) return;
+      if (playerCard) playerCard.style.display = 'block';
+      if (playerTitle) playerTitle.textContent = song.name;
+      if (playerArtist) playerArtist.textContent = (song.artists && song.artists.primary && song.artists.primary.map(function(a) { return a.name; }).join(', ')) || '';
+      var img = (song.image && song.image[song.image.length - 1] && song.image[song.image.length - 1].url) || '';
+      if (playerArt) playerArt.src = img;
+
+      var bestUrl = '';
+      if (song.downloadUrl && song.downloadUrl.length > 0) {
+        var found320 = song.downloadUrl.find(function(d) { return d.quality === '320kbps'; });
+        bestUrl = (found320 && found320.url) || song.downloadUrl[song.downloadUrl.length - 1].url;
+      }
+
+      if (audioEl) {
+        audioEl.src = bestUrl;
+        audioEl.play();
+      }
+
+      if (downloadLinksEl && song.downloadUrl) {
+        var pills = '';
+        for (var d = 0; d < song.downloadUrl.length; d++) {
+          var dl = song.downloadUrl[d];
+          pills += '<a href="' + dl.url + '" target="_blank" download class="dl-pill">' + dl.quality + ' ⬇</a> ';
+        }
+        downloadLinksEl.innerHTML = pills;
+      }
+
+      if (playerCard) playerCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  if (searchBtn) searchBtn.addEventListener('click', performSearch);
+  if (searchInput) {
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') performSearch();
+    });
+  }
+
+  var routeSearch = document.getElementById('route-filter-input');
+  if (routeSearch) {
+    routeSearch.addEventListener('input', function(e) {
+      var val = e.target.value.toLowerCase();
+      document.querySelectorAll('.route-row').forEach(function(row) {
+        var text = row.textContent.toLowerCase();
+        row.style.display = text.indexOf(val) !== -1 ? 'flex' : 'none';
+      });
+    });
+  }
+})();
+`
 
 const styles = `
 :root {
   color-scheme: dark;
-  --bg: #101114;
-  --bg-soft: #15181d;
-  --panel: #191d24;
-  --panel-2: #20252e;
-  --text: #f6f7fb;
-  --muted: #aeb6c6;
-  --line: #303743;
-  --glass: rgba(25, 29, 36, 0.6);
-  --glass-strong: rgba(32, 37, 46, 0.74);
-  --cyan: #61d4ff;
-  --green: #8de36c;
-  --coral: #ff8a7a;
-  --amber: #ffd166;
-  --violet: #b59cff;
+  --bg: #090a0f;
+  --bg-soft: #10131c;
+  --panel: #141824;
+  --panel-2: #1b2132;
+  --panel-border: rgba(97, 212, 255, 0.12);
+  --text: #f0f3fa;
+  --muted: #8e9bb3;
+  --line: #222b3d;
+  --cyan: #38bdf8;
+  --cyan-glow: rgba(56, 189, 248, 0.25);
+  --green: #4ade80;
+  --coral: #f87171;
+  --amber: #fbbf24;
+  --violet: #a78bfa;
 }
 
-* { box-sizing: border-box; }
-
-html {
-  min-height: 100%;
-  scroll-behavior: smooth;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  min-height: 100%;
-  margin: 0;
-  font-family: Manrope, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  letter-spacing: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
   color: var(--text);
-  background: linear-gradient(180deg, #101114 0%, #15181d 48%, #0f1013 100%);
-  line-height: 1.55;
-  overflow-x: hidden;
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(167, 139, 250, 0.05) 50%, transparent 80%);
   pointer-events: none;
-  opacity: 0.18;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(180deg, black, transparent 75%);
-}
-
-a { color: inherit; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes floatPanel {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  z-index: 0;
 }
 
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 10;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: rgba(16,17,20,0.72);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  animation: slideDown 420ms ease both;
+  z-index: 100;
+  background: rgba(9, 10, 15, 0.82);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
 }
-
-.topbar-inner,
-.section {
-  width: min(100% - 32px, 1180px);
-  margin-inline: auto;
-}
-
 .topbar-inner {
-  min-height: 68px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
-
 .brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  text-decoration: none;
-  font-weight: 850;
-}
-
-.mark {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 auto;
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 8px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #ffffff;
-  font-size: 0.82rem;
-}
-
-.brand span:last-child { overflow-wrap: anywhere; }
-
-.nav {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.nav a,
-.button {
-  min-height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  padding: 0 14px;
+  gap: 12px;
   text-decoration: none;
-  font-weight: 750;
-  color: #edf3ff;
-  background: rgba(255,255,255,0.04);
-  white-space: nowrap;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition:
-    transform 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease;
+  color: #fff;
+  font-weight: 700;
+  font-size: 17px;
 }
+.brand-mark {
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  color: #000;
+  font-weight: 900;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 16px var(--cyan-glow);
+}
+.domain-badge {
+  font-size: 11px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.nav-links {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--cyan); }
 
-.nav a:hover,
-.button:hover {
-  border-color: rgba(255,255,255,0.26);
-  background: rgba(255,255,255,0.1);
-  transform: translateY(-2px);
+.main-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  position: relative;
+  z-index: 1;
 }
 
 .hero {
-  min-height: calc(100svh - 68px);
-  display: grid;
-  align-items: center;
-  gap: 34px;
-  grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.78fr);
-  padding-block: 58px 34px;
+  text-align: center;
+  padding: 40px 0 32px;
 }
-
-.eyebrow {
-  width: max-content;
-  max-width: 100%;
+.hero-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(141,227,108,0.28);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
   border-radius: 999px;
-  padding: 7px 12px;
-  color: #c9f7b8;
-  background: rgba(141,227,108,0.08);
-  font-size: 0.82rem;
-  font-weight: 850;
-  text-transform: uppercase;
-  overflow-wrap: anywhere;
+  font-size: 13px;
+  color: var(--cyan);
+  margin-bottom: 20px;
 }
-
-h1,
-h2,
-h3 {
-  margin: 0;
-  letter-spacing: 0;
-  line-height: 1.04;
-}
-
-h1 {
-  max-width: 780px;
-  margin-top: 20px;
-  font-size: 5.1rem;
-}
-
-.lead {
-  max-width: 720px;
-  margin: 22px 0 0;
-  color: var(--muted);
-  font-size: 1.16rem;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 28px;
-}
-
-.button.primary {
-  border-color: rgba(255,255,255,0.28);
-  background: rgba(246,247,251,0.9);
-  color: #101114;
-}
-
-.button.secondary { background: rgba(255,255,255,0.06); }
-
-.button:disabled {
-  cursor: progress;
-  opacity: 0.66;
-  transform: none;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 42px;
-}
-
-.stat,
-.feature,
-.route-row,
-.console {
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  background: var(--glass);
-  backdrop-filter: blur(18px) saturate(120%);
-  -webkit-backdrop-filter: blur(18px) saturate(120%);
-  transition:
-    transform 220ms ease,
-    border-color 220ms ease,
-    background 220ms ease;
-}
-
-.stat {
-  min-height: 112px;
-  padding: 16px;
-  animation: fadeUp 520ms ease both;
-}
-
-.stat:nth-child(2) { animation-delay: 70ms; }
-.stat:nth-child(3) { animation-delay: 140ms; }
-.stat:nth-child(4) { animation-delay: 210ms; }
-
-.stat:hover,
-.feature:hover,
-.route-row:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255,255,255,0.24);
-  background: var(--glass-strong);
-}
-
-.stat strong {
-  display: block;
-  margin-bottom: 7px;
-  color: #ffffff;
-  font-size: 1rem;
-}
-
-.stat span,
-.feature p,
-.section-copy,
-.route-row span:last-child,
-.footer {
-  color: var(--muted);
-}
-
-.console {
-  align-self: center;
-  overflow: hidden;
-  background: var(--glass-strong);
-  animation: floatPanel 6s ease-in-out infinite;
-}
-
-.console-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 46px;
-  padding: 0 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  color: #dbe8f8;
-  font-weight: 850;
-}
-
-.lights {
-  display: flex;
-  gap: 7px;
-}
-
-.light {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--coral);
-}
-
-.light:nth-child(2) { background: var(--amber); }
-.light:nth-child(3) { background: var(--green); }
-
-pre {
-  margin: 0;
-  padding: 20px;
-  overflow-x: auto;
-  color: #eaf5ff;
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
-code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
-
-.route { color: var(--cyan); }
-.key { color: var(--amber); }
-.value { color: var(--green); }
-.note { color: var(--muted); }
-
-.section { padding-block: 64px; }
-
-.api-key-tab {
-  display: grid;
-  gap: 18px;
-}
-
-.tab-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.tab {
-  min-height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 8px;
-  padding: 0 14px;
-  background: rgba(255,255,255,0.06);
-  color: #edf3ff;
-  font-weight: 850;
-}
-
-.tab[aria-selected="true"] {
-  border-color: rgba(97,212,255,0.5);
-  background: rgba(97,212,255,0.13);
-  color: #d8f5ff;
-}
-
-.key-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(300px, 0.64fr);
-  gap: 16px;
-  align-items: stretch;
-}
-
-.key-panel,
-.key-usage {
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  background: var(--glass);
-  backdrop-filter: blur(18px) saturate(120%);
-  -webkit-backdrop-filter: blur(18px) saturate(120%);
-}
-
-.key-panel {
-  padding: 20px;
-}
-
-.key-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+.hero h1 {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.2;
   margin-bottom: 16px;
+  background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  color: var(--muted);
+  font-size: 18px;
+  max-width: 760px;
+  margin: 0 auto 28px;
 }
 
-.key-state {
-  color: var(--green);
-  font-weight: 850;
+.tabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 36px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+  flex-wrap: wrap;
 }
-
-.key-output {
-  min-height: 58px;
+.tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
   display: flex;
   align-items: center;
-  border: 1px solid rgba(255,255,255,0.11);
-  border-radius: 8px;
-  padding: 14px;
-  background: rgba(0,0,0,0.18);
-  color: #f8fbff;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  gap: 8px;
+}
+.tab-btn:hover {
+  color: #fff;
+  background: var(--panel);
+}
+.tab-btn.active {
+  color: #000;
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-glow);
 }
 
-.key-meta {
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.tab-panel.active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.glass-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin-bottom: 28px;
+}
+.card-header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 14px;
+}
+.card-header h2 { font-size: 20px; font-weight: 700; }
+
+.btn-primary {
+  background: var(--cyan);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 14px var(--cyan-glow);
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+.btn-danger {
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid var(--coral);
+  color: var(--coral);
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-danger:hover { background: var(--coral); color: #000; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--line);
   color: var(--muted);
-  font-size: 0.9rem;
+  cursor: pointer;
+}
+.btn-outline:hover { color: #fff; border-color: var(--muted); }
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 6px;
 }
 
-.copy-grid {
-  display: grid;
-  gap: 10px;
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-active { background: rgba(74, 222, 128, 0.15); color: var(--green); border: 1px solid var(--green); }
+.badge-revoked { background: rgba(248, 113, 113, 0.15); color: var(--coral); border: 1px solid var(--coral); }
+.code-badge {
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--violet);
+  border: 1px solid var(--violet);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.key-gen-box {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.key-string-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #06070a;
+  border: 1px solid var(--line);
+  padding: 14px 18px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+.key-string-row code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  color: var(--cyan);
+  word-break: break-all;
+  font-weight: 700;
+}
+.key-meta-row {
+  display: flex;
+  gap: 20px;
+  color: var(--muted);
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.keys-table {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 16px;
 }
-
-.copy-line {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px;
-  align-items: center;
+.keys-table th, .keys-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
 }
-
-.copy-line code {
-  min-height: 44px;
+.keys-table th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.table-key-text {
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+.revoked-row td {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+.action-cell {
   display: flex;
+  gap: 8px;
+}
+
+.snippets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+.snippet-card {
+  background: #07090e;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+.snippet-card h4 {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.snippet-card pre {
+  background: transparent;
+  overflow-x: auto;
+  font-size: 12px;
+  color: #cad5e8;
+  line-height: 1.5;
+}
+
+.search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.search-input {
+  flex: 1;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+.search-input:focus { border-color: var(--cyan); }
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.song-card {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
   align-items: center;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px;
-  padding: 10px 12px;
-  background: rgba(255,255,255,0.045);
-  color: #dbe8f8;
-  overflow-wrap: anywhere;
-  word-break: break-word;
 }
-
-.copy-button {
-  width: 82px;
-  min-height: 44px;
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 8px;
-  background: rgba(246,247,251,0.9);
-  color: #101114;
-  font-weight: 900;
+.song-art {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
 }
+.song-info { flex: 1; min-width: 0; }
+.song-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-artist { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-duration { color: var(--cyan); font-size: 11px; margin-top: 2px; }
 
-.key-usage {
+.player-card {
+  background: linear-gradient(135deg, #161c2b, #0f1420);
+  border: 1px solid var(--cyan);
+  border-radius: 12px;
   padding: 20px;
+  margin-bottom: 24px;
+  display: none;
 }
-
-.key-usage h3 {
-  margin-bottom: 12px;
-  font-size: 1.2rem;
-}
-
-.key-usage pre {
-  border-radius: 8px;
-  background: rgba(0,0,0,0.2);
-}
-
-.section-head {
-  max-width: 780px;
-  margin-bottom: 26px;
-}
-
-h2 { font-size: 3rem; }
-
-.section-copy {
-  margin: 13px 0 0;
-  max-width: 690px;
-  font-size: 1.03rem;
-}
-
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.feature {
-  min-height: 210px;
-  padding: 22px;
-  animation: fadeUp 560ms ease both;
-}
-
-.feature:nth-child(2) { animation-delay: 70ms; }
-.feature:nth-child(3) { animation-delay: 140ms; }
-.feature:nth-child(4) { animation-delay: 210ms; }
-.feature:nth-child(5) { animation-delay: 280ms; }
-.feature:nth-child(6) { animation-delay: 350ms; }
-
-.hero > div,
-.section-head,
-.route-group {
-  animation: fadeUp 560ms ease both;
-}
-
-.feature-badge {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  margin-bottom: 18px;
-  border-radius: 8px;
-  color: #101114;
-  background: var(--amber);
-  font-weight: 850;
-}
-
-.feature:nth-child(2) .feature-badge { background: var(--cyan); }
-.feature:nth-child(3) .feature-badge { background: var(--green); }
-.feature:nth-child(4) .feature-badge { background: var(--coral); }
-.feature:nth-child(5) .feature-badge { background: var(--violet); }
-.feature:nth-child(6) .feature-badge { background: #f3f6ff; }
-
-.feature h3 {
-  margin-bottom: 10px;
-  font-size: 1.12rem;
-}
-
-.feature p { margin: 0; }
-
-.route-groups {
-  display: grid;
-  gap: 24px;
-}
-
-.route-head {
+.player-layout {
   display: flex;
+  gap: 20px;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 10px;
-}
-
-.route-head h3 { font-size: 1.35rem; }
-
-.route-head span {
-  display: grid;
-  place-items: center;
-  min-width: 34px;
-  height: 34px;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 8px;
-  color: #101114;
-  background: #f3f6ff;
-  font-weight: 900;
-}
-
-.route-list {
-  display: grid;
-  gap: 8px;
-}
-
-.route-row {
-  display: grid;
-  grid-template-columns: 74px minmax(0, 0.82fr) minmax(220px, 1fr);
-  align-items: center;
-  gap: 12px;
-  padding: 13px 15px;
-  text-decoration: none;
-}
-
-.method {
-  width: 56px;
-  border-radius: 7px;
-  padding: 5px 0;
-  text-align: center;
-  color: #081014;
-  background: #f3f6ff;
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.route-row code {
-  overflow-wrap: anywhere;
-  color: #f8fbff;
-}
-
-.footer {
-  width: min(100% - 32px, 1180px);
-  margin: 0 auto;
-  padding: 26px 0 38px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
   flex-wrap: wrap;
 }
-
-.footer a {
+.player-art-lg {
+  width: 88px;
+  height: 88px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 16px var(--cyan-glow);
+}
+.player-meta { flex: 1; }
+.dl-pills-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.dl-pill {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid var(--cyan);
   color: var(--cyan);
+  padding: 4px 10px;
+  border-radius: 6px;
   text-decoration: none;
-  font-weight: 850;
+  font-size: 12px;
+  font-weight: 600;
 }
+.dl-pill:hover { background: var(--cyan); color: #000; }
 
-@media (max-width: 920px) {
-  .hero {
-    min-height: auto;
-    grid-template-columns: 1fr;
-    padding-top: 42px;
-  }
-
-  h1 { font-size: 3.5rem; }
-  h2 { font-size: 2.35rem; }
-
-  .stats,
-  .feature-grid,
-  .key-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .route-row {
-    grid-template-columns: 72px minmax(0, 1fr);
-  }
-
-  .route-row span:last-child {
-    grid-column: 2;
-  }
+.route-group {
+  margin-bottom: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
 }
-
-@media (max-width: 640px) {
-  .topbar-inner {
-    align-items: flex-start;
-    flex-direction: column;
-    padding-block: 14px;
-  }
-
-  .nav { justify-content: flex-start; }
-
-  .nav a,
-  .button {
-    min-height: 36px;
-    padding-inline: 11px;
-    font-size: 0.92rem;
-  }
-
-  .stats,
-  .feature-grid,
-  .key-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .copy-line {
-    grid-template-columns: 1fr;
-  }
-
-  .copy-button {
-    width: 100%;
-  }
-
-  .route-row {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-
-  .route-row span:last-child {
-    grid-column: auto;
-  }
-
-  h1 { font-size: 2.45rem; }
-  h2 { font-size: 2rem; }
-  .lead { font-size: 1rem; }
+.route-group-header {
+  padding: 12px 18px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+.route-row {
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.route-row:last-child { border-bottom: none; }
+.method-tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  min-width: 48px;
+  text-align: center;
+}
+.method-tag.get { background: rgba(56, 189, 248, 0.2); color: var(--cyan); }
+.method-tag.post { background: rgba(74, 222, 128, 0.2); color: var(--green); }
+.route-path { font-family: monospace; font-size: 13px; color: #fff; font-weight: 600; }
+.route-desc { color: var(--muted); font-size: 13px; margin-left: auto; }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 1ms !important;
-  }
-}`
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+.feature-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+}
+.feature-icon { font-size: 28px; margin-bottom: 12px; }
+.feature-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+.feature-body { color: var(--muted); font-size: 14px; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 36px 0;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+}
+.stat-title { font-size: 18px; font-weight: 800; color: var(--cyan); margin-bottom: 4px; }
+.stat-desc { font-size: 13px; color: var(--muted); }
+
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+.footer a { color: var(--cyan); text-decoration: none; }
+`
 
 Home.get('/', (c) => {
-  return c.html(`<!doctype html>
+  return c.html(`<!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>${escapeHtml(API_NAME)}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-    <meta name="description" content="${escapeHtml(DESCRIPTION)}">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="${escapeHtml(API_NAME)}">
-    <meta property="og:description" content="${escapeHtml(DESCRIPTION)}">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="${escapeHtml(API_NAME)}">
-    <meta property="twitter:description" content="${escapeHtml(DESCRIPTION)}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(API_NAME)} - Cloudflare Edge</title>
+    <meta name="description" content="${escapeHtml(DESCRIPTION)}" />
     <style>${styles}</style>
   </head>
   <body>
     <header class="topbar">
       <div class="topbar-inner">
-        <a class="brand" href="/" aria-label="${escapeHtml(API_NAME)}">
-          <span class="mark">SD</span>
+        <a class="brand" href="/">
+          <span class="brand-mark">Sh</span>
           <span>${escapeHtml(API_NAME)}</span>
+          <span class="domain-badge">${escapeHtml(CUSTOM_DOMAIN)}</span>
         </a>
-        <nav class="nav" aria-label="Main navigation">
-          <a href="#api-key">API Key</a>
+        <nav class="nav-links">
           <a href="/docs">Docs</a>
           <a href="/swagger">OpenAPI</a>
-          <a href="/health">Status</a>
+          <a href="/health">Health</a>
           <a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
       </div>
     </header>
 
-    <main>
-      <section class="section hero">
-        <div>
-          <span class="eyebrow">Unofficial + No App Rate Limit</span>
-          <h1>Build faster with the ShnwazDev JioSaavn API</h1>
-          <p class="lead">
-            Access albums, artists, browse feeds, lyrics, playlists, podcasts, search, songs, and trending routes
-            through clean JSON responses, OpenAPI docs, and a Vercel-ready serverless API.
-          </p>
-          <div class="actions">
-            <a class="button primary" href="/docs">Open Docs</a>
-            <a class="button secondary" href="#api-key">Generate API Key</a>
-            <a class="button secondary" href="/swagger">View OpenAPI</a>
-            <a class="button secondary" href="/api/endpoints">Endpoint Index</a>
-            <a class="button secondary" href="/api/limits">API Limits</a>
-          </div>
+    <div class="main-wrapper">
+      <section class="hero">
+        <div class="hero-badge">⚡ Cloudflare Edge • ${escapeHtml(CUSTOM_DOMAIN)} • No App Rate Limit</div>
+        <h1>ShnwazDev JioSaavn Music API</h1>
+        <p>
+          Fast, decentralized music streaming API for JioSaavn songs, 320kbps audio, albums, playlists, synced lyrics, and recommendations.
+        </p>
 
-          <div class="stats">
-            ${renderStats()}
-          </div>
-        </div>
-
-        <aside class="console" aria-label="API response preview">
-          <div class="console-head">
-            <span>GET /api/search</span>
-            <span class="lights" aria-hidden="true">
-              <span class="light"></span>
-              <span class="light"></span>
-              <span class="light"></span>
-            </span>
-          </div>
-          <pre><code><span class="route">GET /api/search?query=Believer</span>
-
-${escapeHtml(exampleJson)}
-
-<span class="note">Docs: /docs  Schema: /swagger  Limits: /api/limits</span></code></pre>
-        </aside>
-      </section>
-
-      <section class="section api-key-tab" id="api-key" data-api-key-panel>
-        <div class="section-head">
-          <div class="tab-list" role="tablist" aria-label="API key tools">
-            <span class="tab" role="tab" aria-selected="true">API Key</span>
-            <a class="tab" role="tab" aria-selected="false" href="/docs">Docs</a>
-            <a class="tab" role="tab" aria-selected="false" href="/swagger">OpenAPI</a>
-          </div>
-          <h2>Generate your API key in real time</h2>
-          <p class="section-copy">
-            Click generate to receive a fresh Saya key from <code>/apikey</code>. Use it on every protected
-            <code>/api/*</code> request.
-          </p>
-        </div>
-
-        <div class="key-grid">
-          <div class="key-panel">
-            <div class="key-toolbar">
-              <span class="key-state" data-key-status>Ready</span>
-              <button class="button primary" type="button" data-generate-key>Generate Key</button>
-            </div>
-            <code class="key-output" id="generated-api-key" data-key-output>Generating...</code>
-            <div class="key-meta">
-              <span>Prefix: <strong>Saya</strong></span>
-              <span>Random number: <strong data-random-output>...</strong></span>
-              <span>Generated: <strong data-generated-at>...</strong></span>
-            </div>
-            <div class="copy-grid" aria-label="Copy API key examples">
-              <div class="copy-line">
-                <code id="copy-header" data-key-template="X-API-Key: {key}">X-API-Key: ...</code>
-                <button class="copy-button" type="button" data-copy-target="#copy-header">Copy</button>
-              </div>
-              <div class="copy-line">
-                <code id="copy-bearer" data-key-template="Authorization: Bearer {key}">Authorization: Bearer ...</code>
-                <button class="copy-button" type="button" data-copy-target="#copy-bearer">Copy</button>
-              </div>
-              <div class="copy-line">
-                <code id="copy-query" data-key-template="?apikey={encodedKey}">?apikey=...</code>
-                <button class="copy-button" type="button" data-copy-target="#copy-query">Copy</button>
-              </div>
-            </div>
-          </div>
-
-          <aside class="key-usage" aria-label="API key request example">
-            <h3>Use it fast</h3>
-            <pre><code><span class="route">GET /api/search/songs?query=Kesariya</span>
-<span class="key" data-key-template="X-API-Key: {key}">X-API-Key: ...</span>
-
-<span class="note">Or append the key:</span>
-<span class="route" data-key-template="/api/search/songs?query=Kesariya&amp;apikey={encodedKey}">/api/search/songs?query=Kesariya&amp;apikey=...</span></code></pre>
-          </aside>
+        <div class="stats-grid">
+          ${renderStats()}
         </div>
       </section>
 
-      <section class="section" id="features">
-        <div class="section-head">
-          <h2>Clean API surface for music apps</h2>
-          <p class="section-copy">
-            The website, metadata, docs, and API responses are branded for shnwazdev while keeping the route structure
-            simple to host and extend on Vercel.
-          </p>
+      <!-- Navigation Tabs -->
+      <nav class="tabs-nav" role="tablist">
+        <button class="tab-btn active" data-tab-target="tab-keys">🔑 API Key Generator & Manager</button>
+        <button class="tab-btn" data-tab-target="tab-explorer">🎵 Live Music Explorer</button>
+        <button class="tab-btn" data-tab-target="tab-endpoints">📋 Endpoints Catalog (47+)</button>
+        <button class="tab-btn" data-tab-target="tab-features">✨ Features & Specs</button>
+      </nav>
+
+      <!-- Tab 1: API Keys -->
+      <div class="tab-panel active" id="tab-keys" data-tab-panel>
+        <div class="glass-card">
+          <div class="card-header">
+            <div>
+              <h2>Generate & Manage API Keys</h2>
+              <p style="color: var(--muted); font-size: 14px;">Generate signed <code>Sh.xxx</code> API keys with 3-digit randomized codes. Revoke or test anytime.</p>
+            </div>
+            <button class="btn-primary" id="btn-generate-key">⚡ Generate New Sh. Key</button>
+          </div>
+
+          <div class="key-gen-box">
+            <div class="key-string-row">
+              <code id="gen-key-display">Generating your Sh. API key...</code>
+              <button class="btn-secondary btn-sm" onclick="window.copyText(document.getElementById('gen-key-display').textContent, this)">Copy Key</button>
+            </div>
+            <div class="key-meta-row">
+              <span>Prefix: <strong style="color: var(--cyan)">Sh.</strong></span>
+              <span id="gen-3digit-badge" class="code-badge">3-Digit Code: ...</span>
+              <span>Status: <span id="gen-status-badge" class="badge badge-active">Active</span></span>
+              <span>Generated: <strong id="gen-time-badge" style="color: #fff">...</strong></span>
+              <span id="test-key-result"></span>
+            </div>
+          </div>
+
+          <h3 style="font-size: 16px; margin: 24px 0 12px;">Your Generated Keys (Stored Locally)</h3>
+          <div style="overflow-x: auto;">
+            <table class="keys-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>API Key</th>
+                  <th>Status</th>
+                  <th>Generated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="keys-table-body"></tbody>
+            </table>
+          </div>
+
+          <div class="snippets-grid">
+            <div class="snippet-card">
+              <h4>cURL Request</h4>
+              <pre><code data-snippet-key="curl -X GET 'https://${CUSTOM_DOMAIN}/api/search?query=Kesariya' \\
+  -H 'X-API-Key: {key}'">curl -X GET 'https://${CUSTOM_DOMAIN}/api/search?query=Kesariya' \
+  -H 'X-API-Key: ...'</code></pre>
+            </div>
+
+            <div class="snippet-card">
+              <h4>JavaScript (Fetch)</h4>
+              <pre><code data-snippet-key="const res = await fetch('https://${CUSTOM_DOMAIN}/api/songs?ids=csaAEio2', {
+  headers: { 'X-API-Key': '{key}' }
+});
+const data = await res.json();">const res = await fetch('https://${CUSTOM_DOMAIN}/api/songs?ids=csaAEio2', {
+  headers: { 'X-API-Key': '...' }
+});</code></pre>
+            </div>
+
+            <div class="snippet-card">
+              <h4>Python (requests)</h4>
+              <pre><code data-snippet-key="import requests
+
+res = requests.get(
+    'https://${CUSTOM_DOMAIN}/api/search/songs',
+    params={'query': 'Believer'},
+    headers={'X-API-Key': '{key}'}
+)
+print(res.json())">import requests
+# headers={'X-API-Key': '...'}</code></pre>
+            </div>
+          </div>
         </div>
-        <div class="feature-grid">
+      </div>
+
+      <!-- Tab 2: Explorer -->
+      <div class="tab-panel" id="tab-explorer" data-tab-panel>
+        <div class="glass-card">
+          <div class="card-header">
+            <div>
+              <h2>Live API Explorer & 320kbps Player</h2>
+              <p style="color: var(--muted); font-size: 14px;">Test search queries in real time and listen to decrypted 320kbps high-fidelity audio streams.</p>
+            </div>
+          </div>
+
+          <div class="search-bar">
+            <input type="text" class="search-input" id="explorer-search-input" placeholder="Search for songs, artists, albums (e.g. Believer, Kesariya, Arijit Singh)..." value="Believer" />
+            <button class="btn-primary" id="explorer-search-btn">🔍 Search</button>
+          </div>
+
+          <!-- Audio Stream Player Card -->
+          <div class="player-card" id="explorer-player-card">
+            <div class="player-layout">
+              <img id="player-art" class="player-art-lg" src="" alt="Album Art" />
+              <div class="player-meta">
+                <h3 id="player-title" style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">Song Title</h3>
+                <p id="player-artist" style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">Artist Name</p>
+                <audio id="audio-stream-player" controls style="width: 100%; max-width: 480px; height: 36px;"></audio>
+                <div class="dl-pills-row" id="player-download-links"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="songs-grid" id="explorer-results"></div>
+
+          <h4 style="font-size: 14px; color: var(--muted); margin: 20px 0 8px;">Live JSON Response</h4>
+          <pre style="background: #06070a; padding: 16px; border-radius: 8px; border: 1px solid var(--line); max-height: 240px; overflow: auto; font-size: 12px; color: var(--cyan);"><code id="explorer-json-viewer">// Search to see live JSON response</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab 3: Endpoints -->
+      <div class="tab-panel" id="tab-endpoints" data-tab-panel>
+        <div class="glass-card">
+          <div class="card-header">
+            <div>
+              <h2>All Available API Endpoints (47+)</h2>
+              <p style="color: var(--muted); font-size: 14px;">Browse and filter all available music, search, lyrics, podcasts, and browse routes.</p>
+            </div>
+            <input type="text" id="route-filter-input" class="search-input" style="max-width: 280px; padding: 8px 14px;" placeholder="Filter routes..." />
+          </div>
+
+          <div class="route-groups-container">
+            ${renderRouteGroups()}
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Features -->
+      <div class="tab-panel" id="tab-features" data-tab-panel>
+        <div class="features-grid">
           ${renderFeatures()}
         </div>
-      </section>
-
-      <section class="section" id="endpoints">
-        <div class="section-head">
-          <h2>All requested endpoints</h2>
-          <p class="section-copy">
-            Use these routes from your deployed Vercel URL. Query details and live testing are also available in the docs.
-          </p>
-        </div>
-        <div class="route-groups">
-          ${renderRouteGroups()}
-        </div>
-      </section>
-    </main>
+      </div>
+    </div>
 
     <footer class="footer">
-      <span>Built with Hono, TypeScript, OpenAPI, and Vercel.</span>
-      <a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">shnwazdev repo</a>
+      <p>Built with Hono, TypeScript, OpenAPI & Cloudflare Workers.</p>
+      <p style="margin-top: 6px;"><a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">GitHub Repository</a> • <a href="/docs">Scalar Docs</a> • <a href="/swagger">Swagger JSON</a></p>
     </footer>
-    <script>${apiKeyScript}</script>
+
+    <script>${clientScript}</script>
   </body>
 </html>`)
 })

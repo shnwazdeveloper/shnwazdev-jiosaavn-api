@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import { apiReference } from '@scalar/hono-api-reference'
-import { createApiKey, isValidApiKey } from '#common/helpers'
+import { createApiKey, isValidApiKey, revokeApiKey, isApiKeyRevoked } from '#common/helpers'
 import { ExtendedEndpointList } from '#modules/extended/controllers'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
@@ -15,12 +15,14 @@ const API_REPOSITORY = 'https://github.com/shnwazdeveloper/shnwazdev-jiosaavn-ap
 const API_LIMITS = {
   appRateLimit: 'none',
   requestWindow: 'unlimited by the app',
-  hostLimits: 'Vercel plan and upstream JioSaavn availability can still apply.'
+  hostLimits: 'Cloudflare Workers and upstream JioSaavn availability can still apply.'
 }
 
 const BASE_ENDPOINTS: Array<{ method: string; path: string; description: string }> = [
-  { method: 'GET', path: '/apikey', description: 'Generate a public Saya API key for protected API routes.' },
-  { method: 'GET', path: '/health', description: 'Health check for monitors and Vercel uptime checks.' },
+  { method: 'GET', path: '/apikey', description: 'Generate a public Sh. API key with 3-digit code for protected API routes.' },
+  { method: 'POST', path: '/apikey/revoke', description: 'Revoke an existing API key.' },
+  { method: 'GET', path: '/apikey/validate?key={key}', description: 'Check if an API key is valid and active.' },
+  { method: 'GET', path: '/health', description: 'Health check for monitors and uptime checks.' },
   { method: 'GET', path: '/api', description: 'API metadata with documentation and OpenAPI links.' },
   { method: 'GET', path: '/api/endpoints', description: 'Machine-readable list of available API endpoints.' },
   { method: 'GET', path: '/api/limits', description: 'API limit metadata for clients and dashboards.' },
@@ -51,18 +53,19 @@ const EndpointModel = z.object({
 const LimitModel = z.object({
   appRateLimit: z.string().openapi({ example: 'none' }),
   requestWindow: z.string().openapi({ example: 'unlimited by the app' }),
-  hostLimits: z.string().openapi({ example: 'Vercel plan and upstream JioSaavn availability can still apply.' })
+  hostLimits: z.string().openapi({ example: 'Cloudflare Workers and upstream JioSaavn availability can still apply.' })
 })
 
 const ApiKeyModel = z.object({
-  apiKey: z.string().openapi({ example: 'Saya-123456789-lz88w2-randomSignatureValue' }),
-  prefix: z.string().openapi({ example: 'Saya' }),
+  apiKey: z.string().openapi({ example: 'Sh.842-123456789-lz88w2-randomSignatureValue' }),
+  prefix: z.string().openapi({ example: 'Sh.' }),
+  code3Digit: z.string().openapi({ example: '842' }),
   randomNumber: z.string().openapi({ example: '123456789' }),
   issuedAt: z.string().openapi({ example: 'lz88w2' }),
   usage: z.object({
-    header: z.string().openapi({ example: 'X-API-Key: Saya-123456789-lz88w2-randomSignatureValue' }),
-    bearer: z.string().openapi({ example: 'Authorization: Bearer Saya-123456789-lz88w2-randomSignatureValue' }),
-    query: z.string().openapi({ example: '?apikey=Saya-123456789-lz88w2-randomSignatureValue' })
+    header: z.string().openapi({ example: 'X-API-Key: Sh.842-123456789-lz88w2-randomSignatureValue' }),
+    bearer: z.string().openapi({ example: 'Authorization: Bearer Sh.842-123456789-lz88w2-randomSignatureValue' }),
+    query: z.string().openapi({ example: '?apikey=Sh.842-123456789-lz88w2-randomSignatureValue' })
   })
 })
 
@@ -97,7 +100,7 @@ export class App {
         path: '/apikey',
         tags: ['Meta'],
         summary: 'Generate API key',
-        description: 'Generates a fast Saya API key that can be used with protected /api routes.',
+        description: 'Generates a fresh Sh. API key with unique 3-digit code for protected /api routes.',
         operationId: 'generateApiKey',
         responses: {
           200: {
@@ -130,6 +133,35 @@ export class App {
         })
       }
     )
+
+    this.app.post('/apikey/revoke', async (ctx) => {
+      const body = await ctx.req.json().catch(() => ({})) as { apiKey?: string; key?: string }
+      const keyToRevoke = body?.apiKey || body?.key || ctx.req.query('key') || ctx.req.query('apikey')
+
+      if (!keyToRevoke) {
+        return ctx.json({ success: false, message: 'apiKey parameter is required' }, 400)
+      }
+
+      revokeApiKey(keyToRevoke)
+      return ctx.json({ success: true, message: 'API key revoked successfully', apiKey: keyToRevoke })
+    })
+
+    this.app.get('/apikey/validate', (ctx) => {
+      const key = ctx.req.query('key') || ctx.req.query('apikey') || ctx.req.header('x-api-key')
+      if (!key) {
+        return ctx.json({ success: false, valid: false, message: 'Missing key parameter' }, 400)
+      }
+
+      const valid = isValidApiKey(key)
+      const revoked = isApiKeyRevoked(key)
+
+      return ctx.json({
+        success: true,
+        valid: valid && !revoked,
+        revoked,
+        apiKey: key
+      })
+    })
 
     this.app.openapi(
       createRoute({

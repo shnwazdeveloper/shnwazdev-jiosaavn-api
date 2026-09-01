@@ -48,6 +48,9 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "vitest run",
     "test:ui": "vitest --ui",
+    "deploy": "wrangler deploy",
+    "deploy:cf": "wrangler deploy",
+    "dev:cf": "wrangler dev",
     "vercel:dev": "npx vercel dev",
     "vercel:deploy": "npx vercel --prod",
     "spell-check": "cspell ."
