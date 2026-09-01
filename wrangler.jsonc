@@ -12,7 +12,7 @@
   },
   "workers_dev": true,
   "routes": [
-    { "pattern": "moremuthi.com", "custom_domain": true },
-    { "pattern": "api.moremuthi.com", "custom_domain": true }
+    { "pattern": "jio.shnwaz.dev", "custom_domain": true },
+    { "pattern": "api.shnwaz.dev", "custom_domain": true }
   ]
 }
