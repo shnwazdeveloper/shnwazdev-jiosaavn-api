@@ -4,9 +4,8 @@ export const Home = new Hono()
 
 const API_NAME = 'ShnwazDev JioSaavn API'
 const REPOSITORY_URL = 'https://github.com/shnwazdeveloper/shnwazdev-jiosaavn-api'
-const DISPLAY_DOMAIN = 'Sh.jio.workers.dev'
 const DESCRIPTION =
-  'High-performance TypeScript music streaming and metadata API on Cloudflare Edge.'
+  'ShnwazDev JioSaavn API is an unofficial TypeScript API for songs, albums, artists, playlists, search, and recommendations.'
 
 type RouteItem = {
   method: string
@@ -20,104 +19,141 @@ type RouteGroup = {
   routes: RouteItem[]
 }
 
+const features = [
+  {
+    label: 'S',
+    title: 'Search Engine',
+    body: 'Global and scoped search routes for songs, albums, artists, playlists, and top-query results.'
+  },
+  {
+    label: 'B',
+    title: 'Browse Feeds',
+    body: 'Home, charts, channels, genres, moods, music plus, radio, city modules, and editorial promos.'
+  },
+  {
+    label: 'K',
+    title: 'API Key Tab',
+    body: 'Generate a fresh Sh. key from the website and use it on every protected /api route.'
+  },
+  {
+    label: 'V',
+    title: 'Cloudflare Edge',
+    body: 'The API runs through a native Cloudflare serverless function entry and ships compiled TypeScript files.'
+  },
+  {
+    label: 'O',
+    title: 'OpenAPI 3.1',
+    body: 'Interactive documentation and a generated schema are available from the same deployment.'
+  },
+  {
+    label: 'L',
+    title: 'Lyrics + Podcasts',
+    body: 'Lyrics, synced lyrics, podcast shows, episodes, trending data, and share/ringtone utilities.'
+  }
+]
+
 const stats = [
-  ['47+ Routes', 'Albums, artists, browse, lyrics, playlists, podcasts, search, songs, trending'],
-  ['Cloudflare Edge', 'Zero cold-start global edge distribution with nodejs_compat'],
-  ['Sh. Keys', 'Compact 3-character random alphanumeric key format'],
-  ['OpenAPI 3.1', 'Interactive Scalar documentation & Swagger schemas']
+  ['47 Music Routes', 'Albums, artists, browse, lyrics, playlists, podcasts, search, songs, and trending'],
+  ['No App Limit', 'No app rate limiter is installed in the project'],
+  ['OpenAPI 3.1', 'Schema generated from the deployed routes'],
+  ['Cloudflare Edge', 'Global serverless function on Cloudflare Workers']
 ]
 
 const routeGroups: RouteGroup[] = [
   {
     name: 'Album',
     count: 1,
-    routes: [{ method: 'GET', path: '/api/albums?id={id}', description: 'Retrieve album by ID or JioSaavn URL' }]
+    routes: [{ method: 'GET', path: '/api/albums', description: 'Retrieve an album by ID or link' }]
   },
   {
     name: 'Artists',
     count: 6,
     routes: [
-      { method: 'GET', path: '/api/artists?id={id}', description: 'Retrieve artists by ID or link' },
-      { method: 'GET', path: '/api/artists/{id}', description: 'Retrieve artist overview by ID' },
-      { method: 'GET', path: '/api/artists/{id}/albums', description: "Retrieve artist albums" },
+      { method: 'GET', path: '/api/artists', description: 'Retrieve artists by ID or link' },
+      { method: 'GET', path: '/api/artists/{id}', description: 'Retrieve artist by ID' },
+      { method: 'GET', path: '/api/artists/{id}/albums', description: "Retrieve artist's albums" },
       { method: 'GET', path: '/api/artists/{id}/related', description: 'Retrieve related artists' },
-      { method: 'GET', path: '/api/artists/{id}/songs', description: "Retrieve artist songs" },
-      { method: 'GET', path: '/api/artists/by-name?name={name}', description: 'Retrieve artist by name query' }
+      { method: 'GET', path: '/api/artists/{id}/songs', description: "Retrieve artist's songs" },
+      { method: 'GET', path: '/api/artists/by-name', description: 'Retrieve artist by name' }
     ]
   },
   {
     name: 'Browse',
     count: 16,
     routes: [
-      { method: 'GET', path: '/api/channels', description: 'Retrieve browse channels' },
-      { method: 'GET', path: '/api/channels/{id}', description: 'Retrieve channel details' },
-      { method: 'GET', path: '/api/charts', description: 'Retrieve top trending charts' },
-      { method: 'GET', path: '/api/discover', description: 'Retrieve discover modules' },
-      { method: 'GET', path: '/api/genres', description: 'Retrieve music genres' },
-      { method: 'GET', path: '/api/home', description: 'Retrieve full JioSaavn home feed' },
-      { method: 'GET', path: '/api/home/artist-recommendations', description: 'Retrieve home artist recommendations' },
-      { method: 'GET', path: '/api/home/city-modules', description: 'Retrieve city trending modules' },
-      { method: 'GET', path: '/api/home/modules', description: 'Retrieve feed module metadata' },
+      { method: 'GET', path: '/api/channels', description: 'Retrieve channels' },
+      { method: 'GET', path: '/api/channels/{id}', description: 'Retrieve channel detail' },
+      { method: 'GET', path: '/api/charts', description: 'Retrieve JioSaavn charts' },
+      { method: 'GET', path: '/api/discover', description: 'Retrieve discover channels' },
+      { method: 'GET', path: '/api/genres', description: 'Retrieve genre channels' },
+      { method: 'GET', path: '/api/home', description: 'Retrieve the JioSaavn home feed' },
+      {
+        method: 'GET',
+        path: '/api/home/artist-recommendations',
+        description: 'Retrieve home artist radio recommendations'
+      },
+      { method: 'GET', path: '/api/home/city-modules', description: 'Retrieve home city modules' },
+      { method: 'GET', path: '/api/home/modules', description: 'Retrieve home feed module metadata' },
       { method: 'GET', path: '/api/home/promos', description: 'Retrieve editorial promo groups' },
-      { method: 'GET', path: '/api/moods', description: 'Retrieve mood categories' },
-      { method: 'GET', path: '/api/music-plus', description: 'Retrieve music plus stations' },
-      { method: 'GET', path: '/api/radio', description: 'Retrieve radio categories' },
-      { method: 'GET', path: '/api/radio/{id}', description: 'Retrieve radio station payload' },
-      { method: 'GET', path: '/api/radio/artists', description: 'Retrieve artist radio stations' },
-      { method: 'GET', path: '/api/radio/featured', description: 'Retrieve featured stations' }
+      { method: 'GET', path: '/api/moods', description: 'Retrieve mood channels' },
+      { method: 'GET', path: '/api/music-plus', description: 'Retrieve music plus channels' },
+      { method: 'GET', path: '/api/radio', description: 'Retrieve radio stations' },
+      { method: 'GET', path: '/api/radio/{id}', description: 'Retrieve a radio station detail payload' },
+      { method: 'GET', path: '/api/radio/artists', description: 'Retrieve artist radio recommendations' },
+      { method: 'GET', path: '/api/radio/featured', description: 'Retrieve featured radio stations' }
     ]
   },
   {
     name: 'Lyrics',
     count: 3,
     routes: [
-      { method: 'GET', path: '/api/lyrics?query={query}', description: 'Retrieve lyrics by song title' },
-      { method: 'GET', path: '/api/lyrics/{id}', description: 'Retrieve lyrics by song ID' },
-      { method: 'GET', path: '/api/lyrics/{id}/sync', description: 'Retrieve synchronized time-stamped lyrics' }
+      { method: 'GET', path: '/api/lyrics', description: 'Retrieve lyrics by song name' },
+      { method: 'GET', path: '/api/lyrics/{id}', description: 'Retrieve lyrics by song or lyrics ID' },
+      { method: 'GET', path: '/api/lyrics/{id}/sync', description: 'Retrieve synced lyrics payload' }
     ]
   },
   {
     name: 'Playlist',
     count: 1,
-    routes: [{ method: 'GET', path: '/api/playlists?id={id}', description: 'Retrieve playlist by ID or link' }]
+    routes: [{ method: 'GET', path: '/api/playlists', description: 'Retrieve a playlist by ID or link' }]
   },
   {
     name: 'Podcasts',
     count: 3,
     routes: [
-      { method: 'GET', path: '/api/episodes/{id}', description: 'Retrieve podcast episode details' },
-      { method: 'GET', path: '/api/podcasts?id={id}', description: 'Retrieve podcast show by ID or link' },
-      { method: 'GET', path: '/api/podcasts/{id}', description: 'Retrieve show detail and episodes' }
+      { method: 'GET', path: '/api/episodes/{id}', description: 'Retrieve a podcast episode by ID' },
+      { method: 'GET', path: '/api/podcasts', description: 'Retrieve a podcast by show ID, token, link, or query' },
+      { method: 'GET', path: '/api/podcasts/{id}', description: 'Retrieve a podcast by ID or token' }
     ]
   },
   {
     name: 'Search',
     count: 6,
     routes: [
-      { method: 'GET', path: '/api/search?query={query}', description: 'Global unified search' },
-      { method: 'GET', path: '/api/search/albums?query={query}', description: 'Search albums' },
-      { method: 'GET', path: '/api/search/artists?query={query}', description: 'Search artists' },
-      { method: 'GET', path: '/api/search/playlists?query={query}', description: 'Search playlists' },
-      { method: 'GET', path: '/api/search/songs?query={query}', description: 'Search songs with pagination' },
-      { method: 'GET', path: '/api/search/top-query?query={query}', description: 'Search top query bucket' }
+      { method: 'GET', path: '/api/search', description: 'Global search' },
+      { method: 'GET', path: '/api/search/albums', description: 'Search for albums' },
+      { method: 'GET', path: '/api/search/artists', description: 'Search for artists' },
+      { method: 'GET', path: '/api/search/playlists', description: 'Search for playlists' },
+      { method: 'GET', path: '/api/search/songs', description: 'Search for songs' },
+      { method: 'GET', path: '/api/search/top-query', description: 'Search for the top query bucket' }
     ]
   },
   {
     name: 'Songs',
     count: 5,
     routes: [
-      { method: 'GET', path: '/api/songs?ids={ids}', description: 'Retrieve songs by IDs' },
-      { method: 'GET', path: '/api/songs/{id}', description: 'Retrieve song details by ID' },
-      { method: 'GET', path: '/api/songs/{id}/ringtone', description: 'Retrieve ringtone preview' },
-      { method: 'GET', path: '/api/songs/{id}/share', description: 'Retrieve shareable link' },
-      { method: 'GET', path: '/api/songs/{id}/suggestions', description: 'Retrieve song recommendations' }
+      { method: 'GET', path: '/api/songs', description: 'Retrieve songs by ID or link' },
+      { method: 'GET', path: '/api/songs/{id}', description: 'Retrieve song by ID' },
+      { method: 'GET', path: '/api/songs/{id}/ringtone', description: 'Retrieve ringtone preview details' },
+      { method: 'GET', path: '/api/songs/{id}/share', description: 'Retrieve a shareable song link' },
+      { method: 'GET', path: '/api/songs/{id}/suggestions', description: 'Retrieve song suggestions' }
     ]
   },
   {
     name: 'Trending',
     count: 6,
     routes: [
-      { method: 'GET', path: '/api/trending', description: 'Retrieve all trending items' },
+      { method: 'GET', path: '/api/trending', description: 'Retrieve all browse feeds in one response' },
       { method: 'GET', path: '/api/trending/albums', description: 'Retrieve trending albums' },
       { method: 'GET', path: '/api/trending/artists', description: 'Retrieve trending artists' },
       { method: 'GET', path: '/api/trending/playlists', description: 'Retrieve trending playlists' },
@@ -126,6 +162,81 @@ const routeGroups: RouteGroup[] = [
     ]
   }
 ]
+
+const exampleJson = `{
+  "success": true,
+  "data": {
+    "songs": { "results": [...] },
+    "albums": { "results": [...] },
+    "artists": { "results": [...] },
+    "playlists": { "results": [...] }
+  }
+}`
+
+const apiKeyScript = `
+(() => {
+  const panel = document.querySelector('[data-api-key-panel]')
+  if (!panel) return
+
+  const keyOutput = panel.querySelector('[data-key-output]')
+  const randomOutput = panel.querySelector('[data-random-output]')
+  const statusOutput = panel.querySelector('[data-key-status]')
+  const generatedAtOutput = panel.querySelector('[data-generated-at]')
+  const generateButton = panel.querySelector('[data-generate-key]')
+  const copyButtons = panel.querySelectorAll('[data-copy-target]')
+
+  const setStatus = (message) => {
+    if (statusOutput) statusOutput.textContent = message
+  }
+
+  const setKey = (apiKey, code) => {
+    if (keyOutput) keyOutput.textContent = apiKey
+    if (randomOutput) randomOutput.textContent = code || apiKey.replace('Sh.', '')
+    if (generatedAtOutput) generatedAtOutput.textContent = new Date().toLocaleTimeString()
+
+    panel.querySelectorAll('[data-key-template]').forEach((item) => {
+      const template = item.getAttribute('data-key-template') || ''
+      item.textContent = template.replaceAll('{key}', apiKey).replaceAll('{encodedKey}', encodeURIComponent(apiKey))
+    })
+  }
+
+  const generateKey = async () => {
+    if (generateButton) generateButton.setAttribute('disabled', 'true')
+    setStatus('Generating...')
+
+    try {
+      const response = await fetch('/apikey', { cache: 'no-store' })
+      if (!response.ok) throw new Error('Request failed')
+
+      const body = await response.json()
+      setKey(body.data.apiKey, body.data.code || body.data.code3Digit || body.data.apiKey.replace('Sh.', ''))
+      setStatus('Ready')
+    } catch {
+      setStatus('Try again')
+    } finally {
+      if (generateButton) generateButton.removeAttribute('disabled')
+    }
+  }
+
+  copyButtons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const target = panel.querySelector(button.getAttribute('data-copy-target') || '')
+      const value = target ? target.textContent.trim() : ''
+      if (!value) return
+
+      await navigator.clipboard.writeText(value)
+      const original = button.textContent
+      button.textContent = 'Copied'
+      window.setTimeout(() => {
+        button.textContent = original
+      }, 1200)
+    })
+  })
+
+  generateButton?.addEventListener('click', generateKey)
+  generateKey()
+})()
+`
 
 const escapeHtml = (value: string) =>
   value
@@ -139,10 +250,22 @@ const renderStats = () =>
   stats
     .map(
       ([title, body]) => `
-        <div class="stat-box">
-          <div class="stat-num">${escapeHtml(title)}</div>
-          <div class="stat-label">${escapeHtml(body)}</div>
+        <div class="stat">
+          <strong>${escapeHtml(title)}</strong>
+          <span>${escapeHtml(body)}</span>
         </div>`
+    )
+    .join('')
+
+const renderFeatures = () =>
+  features
+    .map(
+      (feature) => `
+        <article class="feature">
+          <span class="feature-badge">${escapeHtml(feature.label)}</span>
+          <h3>${escapeHtml(feature.title)}</h3>
+          <p>${escapeHtml(feature.body)}</p>
+        </article>`
     )
     .join('')
 
@@ -150,1044 +273,869 @@ const renderRouteGroups = () =>
   routeGroups
     .map(
       (group) => `
-        <div class="liquid-group">
-          <div class="group-header">
-            <span class="group-title">${escapeHtml(group.name)}</span>
-            <span class="pill">${group.count} ${group.count === 1 ? 'endpoint' : 'endpoints'}</span>
+        <section class="route-group" aria-labelledby="route-${escapeHtml(group.name.toLowerCase())}">
+          <div class="route-head">
+            <h3 id="route-${escapeHtml(group.name.toLowerCase())}">${escapeHtml(group.name)}</h3>
+            <span>${group.count}</span>
           </div>
-          <div class="group-rows">
+          <div class="route-list">
             ${group.routes
               .map(
                 (route) => `
-                  <div class="route-item">
-                    <span class="method-tag">${escapeHtml(route.method)}</span>
-                    <code class="route-uri">${escapeHtml(route.path)}</code>
-                    <span class="route-desc">${escapeHtml(route.description)}</span>
-                  </div>`
+                  <a class="route-row" href="${escapeHtml(route.path.replaceAll('{id}', 'id'))}">
+                    <span class="method">${escapeHtml(route.method)}</span>
+                    <code>${escapeHtml(route.path)}</code>
+                    <span>${escapeHtml(route.description)}</span>
+                  </a>`
               )
               .join('')}
           </div>
-        </div>`
+        </section>`
     )
     .join('')
 
-const clientScript = `
-(() => {
-  // Tabs Switcher
-  var tabButtons = document.querySelectorAll('[data-tab-btn]');
-  var tabPanels = document.querySelectorAll('[data-tab-panel]');
-
-  function switchTab(targetId) {
-    tabButtons.forEach(function(b) {
-      var match = b.getAttribute('data-tab-btn') === targetId;
-      b.classList.toggle('active', match);
-      b.setAttribute('aria-selected', match ? 'true' : 'false');
-    });
-    tabPanels.forEach(function(p) {
-      p.classList.toggle('active', p.id === targetId);
-    });
-    if (history.replaceState) {
-      history.replaceState(null, '', '#' + targetId);
-    }
-  }
-
-  tabButtons.forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      switchTab(btn.getAttribute('data-tab-btn'));
-    });
-  });
-
-  if (window.location.hash) {
-    var initialHash = window.location.hash.replace('#', '');
-    if (document.getElementById(initialHash)) {
-      switchTab(initialHash);
-    }
-  }
-
-  // Key Generation
-  var currentApiKey = '';
-  var keyDisplay = document.getElementById('key-display-text');
-  var keyGenBtn = document.getElementById('btn-gen-key');
-  var testResultEl = document.getElementById('key-test-feedback');
-
-  function updateTemplates(key) {
-    currentApiKey = key;
-    document.querySelectorAll('[data-code-snippet]').forEach(function(el) {
-      var raw = el.getAttribute('data-code-snippet');
-      el.textContent = raw.split('{KEY}').join(key || 'Sh.Qre');
-    });
-  }
-
-  async function generateKey() {
-    if (keyGenBtn) keyGenBtn.disabled = true;
-    if (keyDisplay) keyDisplay.textContent = 'Generating...';
-
-    try {
-      var res = await fetch('/apikey', { cache: 'no-store' });
-      var json = await res.json();
-      if (json.success && json.data) {
-        var key = json.data.apiKey;
-        if (keyDisplay) keyDisplay.textContent = key;
-        updateTemplates(key);
-        if (testResultEl) testResultEl.innerHTML = '<span class="status-dot green"></span> Active & Ready';
-      }
-    } catch (e) {
-      if (keyDisplay) keyDisplay.textContent = 'Error';
-    } finally {
-      if (keyGenBtn) keyGenBtn.disabled = false;
-    }
-  }
-
-  window.copyValue = async function(text, btn) {
-    if (!text) return;
-    await navigator.clipboard.writeText(text);
-    if (btn) {
-      var prev = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(function() { btn.textContent = prev; }, 1200);
-    }
-  };
-
-  window.testCurrentKey = async function() {
-    if (!currentApiKey) {
-      alert('Please generate a key first.');
-      return;
-    }
-    if (testResultEl) testResultEl.innerHTML = '<span class="status-dot yellow"></span> Testing key...';
-
-    try {
-      var start = performance.now();
-      var res = await fetch('/api/endpoints', {
-        headers: { 'X-API-Key': currentApiKey }
-      });
-      var latency = Math.round(performance.now() - start);
-      if (res.ok) {
-        if (testResultEl) testResultEl.innerHTML = '<span class="status-dot green"></span> 200 OK (' + latency + 'ms) - Authenticated';
-      } else {
-        var data = await res.json().catch(function() { return {}; });
-        if (testResultEl) testResultEl.innerHTML = '<span class="status-dot red"></span> ' + res.status + ' ' + (data.message || 'Unauthorized');
-      }
-    } catch (err) {
-      if (testResultEl) testResultEl.innerHTML = '<span class="status-dot red"></span> Connection Failed';
-    }
-  };
-
-  if (keyGenBtn) keyGenBtn.addEventListener('click', generateKey);
-  generateKey();
-
-  // Admin Panel (Protected Revoke / Management)
-  var adminPassInput = document.getElementById('admin-pass-input');
-  var adminLoginBtn = document.getElementById('admin-login-btn');
-  var adminTableContainer = document.getElementById('admin-table-container');
-  var adminTableBody = document.getElementById('admin-table-body');
-  var adminMsgEl = document.getElementById('admin-msg');
-  var currentAdminSecret = '';
-
-  async function loadAdminKeys() {
-    var pass = (adminPassInput && adminPassInput.value.trim()) || currentAdminSecret;
-    if (!pass) {
-      if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--coral);">Admin passcode required</span>';
-      return;
-    }
-
-    try {
-      var res = await fetch('/api/admin/keys?secret=' + encodeURIComponent(pass));
-      var json = await res.json();
-      if (!res.ok || !json.success) {
-        if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--coral);">' + (json.message || 'Unauthorized passcode') + '</span>';
-        return;
-      }
-
-      currentAdminSecret = pass;
-      if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--emerald);">Admin authenticated</span>';
-      if (adminTableContainer) adminTableContainer.style.display = 'block';
-
-      var keys = json.data || [];
-      if (keys.length === 0) {
-        adminTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px; color: var(--muted);">No keys generated yet</td></tr>';
-        return;
-      }
-
-      var html = '';
-      for (var i = 0; i < keys.length; i++) {
-        var item = keys[i];
-        var actionBtn = item.revoked
-          ? '<button class="glass-btn btn-sm" onclick="window.adminUnrevokeKey(' + JSON.stringify(item.apiKey) + ')">Restore</button>'
-          : '<button class="glass-btn btn-sm btn-danger" onclick="window.adminRevokeKey(' + JSON.stringify(item.apiKey) + ')">Revoke</button>';
-
-        html += '<tr class="' + (item.revoked ? 'revoked' : '') + '">' +
-          '<td><code>' + item.apiKey + '</code></td>' +
-          '<td><span class="status-badge ' + (item.revoked ? 'badge-revoked' : 'badge-active') + '">' + (item.revoked ? 'Revoked' : 'Active') + '</span></td>' +
-          '<td>' + (item.createdAt ? item.createdAt.slice(11, 19) : '---') + '</td>' +
-          '<td>' + actionBtn + '</td>' +
-        '</tr>';
-      }
-      adminTableBody.innerHTML = html;
-    } catch (err) {
-      if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--coral);">Error: ' + err.message + '</span>';
-    }
-  }
-
-  window.adminRevokeKey = async function(key) {
-    if (!confirm('Revoke ' + key + '? It will immediately be blocked.')) return;
-    try {
-      var res = await fetch('/apikey/revoke', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: key, secret: currentAdminSecret })
-      });
-      var data = await res.json();
-      if (res.ok && data.success) {
-        loadAdminKeys();
-      } else {
-        alert(data.message || 'Revocation failed');
-      }
-    } catch (e) {
-      alert('Error: ' + e.message);
-    }
-  };
-
-  window.adminUnrevokeKey = async function(key) {
-    try {
-      var res = await fetch('/api/admin/unrevoke', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: key, secret: currentAdminSecret })
-      });
-      var data = await res.json();
-      if (res.ok && data.success) {
-        loadAdminKeys();
-      } else {
-        alert(data.message || 'Restore failed');
-      }
-    } catch (e) {
-      alert('Error: ' + e.message);
-    }
-  };
-
-  if (adminLoginBtn) adminLoginBtn.addEventListener('click', loadAdminKeys);
-
-  // Music Explorer
-  var searchInput = document.getElementById('search-query-input');
-  var searchBtn = document.getElementById('search-action-btn');
-  var resultsGrid = document.getElementById('search-results-grid');
-  var playerWrapper = document.getElementById('liquid-player');
-  var audioElem = document.getElementById('stream-audio-elem');
-  var playerCover = document.getElementById('player-cover-art');
-  var playerTitle = document.getElementById('player-track-title');
-  var playerArtist = document.getElementById('player-track-artist');
-  var dlLinksContainer = document.getElementById('player-dl-links');
-  var rawJsonBox = document.getElementById('raw-json-box');
-
-  async function searchSongs() {
-    var q = (searchInput && searchInput.value.trim()) || 'Believer';
-    if (resultsGrid) resultsGrid.innerHTML = '<div style="padding: 24px; color: var(--muted); text-align: center;">Searching...</div>';
-
-    try {
-      var res = await fetch('/api/search/songs?query=' + encodeURIComponent(q), {
-        headers: currentApiKey ? { 'X-API-Key': currentApiKey } : {}
-      });
-      var json = await res.json();
-      if (rawJsonBox) rawJsonBox.textContent = JSON.stringify(json, null, 2);
-
-      if (json.success && json.data && json.data.results && json.data.results.length > 0) {
-        var html = '';
-        var items = json.data.results.slice(0, 6);
-        for (var i = 0; i < items.length; i++) {
-          var s = items[i];
-          var art = (s.image && s.image[s.image.length - 1] && s.image[s.image.length - 1].url) || '';
-          var artName = (s.artists && s.artists.primary && s.artists.primary.map(function(a) { return a.name; }).join(', ')) || 'Artist';
-          var duration = s.duration ? (Math.floor(s.duration / 60) + ':' + (s.duration % 60 < 10 ? '0' : '') + (s.duration % 60)) : '';
-
-          html += '<div class="liquid-song-card">' +
-            '<img src="' + art + '" alt="' + s.name + '" class="card-art" />' +
-            '<div class="card-meta">' +
-              '<div class="card-title">' + s.name + '</div>' +
-              '<div class="card-artist">' + artName + '</div>' +
-              '<div class="card-sub">' + duration + (s.year ? ' • ' + s.year : '') + '</div>' +
-            '</div>' +
-            '<button class="glass-btn btn-sm" onclick="window.playTrack(' + JSON.stringify(encodeURIComponent(JSON.stringify(s))) + ')">Play</button>' +
-          '</div>';
-        }
-        resultsGrid.innerHTML = html;
-      } else {
-        resultsGrid.innerHTML = '<div style="padding: 24px; color: var(--muted); text-align: center;">No tracks found</div>';
-      }
-    } catch (e) {
-      if (resultsGrid) resultsGrid.innerHTML = '<div style="padding: 24px; color: var(--coral); text-align: center;">Request failed</div>';
-    }
-  }
-
-  window.playTrack = function(encoded) {
-    try {
-      var track = JSON.parse(decodeURIComponent(encoded));
-      if (!track) return;
-      if (playerWrapper) playerWrapper.style.display = 'flex';
-      if (playerTitle) playerTitle.textContent = track.name;
-      if (playerArtist) playerArtist.textContent = (track.artists && track.artists.primary && track.artists.primary.map(function(a) { return a.name; }).join(', ')) || '';
-      var cover = (track.image && track.image[track.image.length - 1] && track.image[track.image.length - 1].url) || '';
-      if (playerCover) playerCover.src = cover;
-
-      var streamUrl = '';
-      if (track.downloadUrl && track.downloadUrl.length > 0) {
-        var hq = track.downloadUrl.find(function(d) { return d.quality === '320kbps'; });
-        streamUrl = (hq && hq.url) || track.downloadUrl[track.downloadUrl.length - 1].url;
-      }
-
-      if (audioElem) {
-        audioElem.src = streamUrl;
-        audioElem.play();
-      }
-
-      if (dlLinksContainer && track.downloadUrl) {
-        var dls = '';
-        for (var k = 0; k < track.downloadUrl.length; k++) {
-          var item = track.downloadUrl[k];
-          dls += '<a href="' + item.url + '" target="_blank" download class="pill-link">' + item.quality + '</a>';
-        }
-        dlLinksContainer.innerHTML = dls;
-      }
-      playerWrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } catch (e) {}
-  };
-
-  if (searchBtn) searchBtn.addEventListener('click', searchSongs);
-  if (searchInput) {
-    searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') searchSongs();
-    });
-  }
-
-  // Route Filter
-  var filterInput = document.getElementById('routes-search-filter');
-  if (filterInput) {
-    filterInput.addEventListener('input', function(e) {
-      var term = e.target.value.toLowerCase();
-      document.querySelectorAll('.route-item').forEach(function(row) {
-        row.style.display = row.textContent.toLowerCase().indexOf(term) !== -1 ? 'flex' : 'none';
-      });
-    });
-  }
-})();
-`
-
 const styles = `
 :root {
-  --bg: #06080c;
-  --bg-subtle: #0a0e17;
-  --glass-bg: rgba(16, 22, 34, 0.42);
-  --glass-bg-hover: rgba(22, 30, 48, 0.58);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-highlight: rgba(255, 255, 255, 0.16);
-  --text-main: #f4f6fa;
-  --text-muted: #7e8b9f;
-  --accent: #38bdf8;
-  --emerald: #34d399;
-  --coral: #f87171;
-  --yellow: #fbbf24;
+  color-scheme: dark;
+  --bg: #101114;
+  --bg-soft: #15181d;
+  --panel: #191d24;
+  --panel-2: #20252e;
+  --text: #f6f7fb;
+  --muted: #aeb6c6;
+  --line: #303743;
+  --glass: rgba(25, 29, 36, 0.6);
+  --glass-strong: rgba(32, 37, 46, 0.74);
+  --cyan: #61d4ff;
+  --green: #8de36c;
+  --coral: #ff8a7a;
+  --amber: #ffd166;
+  --violet: #b59cff;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; }
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: var(--bg);
-  color: var(--text-main);
-  line-height: 1.5;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+  margin: 0;
+  font-family: Manrope, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  color: var(--text);
+  background: linear-gradient(180deg, #101114 0%, #15181d 48%, #0f1013 100%);
+  line-height: 1.55;
+  overflow-x: hidden;
 }
 
-/* Header */
-.liquid-nav {
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(180deg, black, transparent 75%);
+}
+
+a { color: inherit; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatPanel {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.topbar {
   position: sticky;
   top: 0;
-  z-index: 50;
-  background: rgba(6, 8, 12, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
+  z-index: 10;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(16,17,20,0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: slideDown 420ms ease both;
 }
-.nav-container {
-  max-width: 1140px;
-  margin: 0 auto;
-  padding: 14px 20px;
+
+.topbar-inner,
+.section {
+  width: min(100% - 32px, 1180px);
+  margin-inline: auto;
+}
+
+.topbar-inner {
+  min-height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
-.brand-group {
-  display: flex;
+
+.brand {
+  display: inline-flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
   text-decoration: none;
-  color: var(--text-main);
-  font-weight: 600;
-  font-size: 15px;
-}
-.brand-chip {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border-highlight);
-  color: var(--accent);
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-.domain-pill {
-  font-size: 11px;
-  color: var(--text-muted);
-  border: 1px solid var(--glass-border);
-  padding: 2px 8px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-}
-.header-links {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-.header-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.15s;
-}
-.header-links a:hover { color: var(--text-main); }
-
-/* Main Container */
-.container {
-  max-width: 1140px;
-  margin: 0 auto;
-  padding: 32px 20px 80px;
+  font-weight: 850;
 }
 
-/* Hero */
-.hero-block {
-  text-align: center;
-  padding: 28px 0 36px;
-}
-.hero-title {
-  font-size: 36px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin-bottom: 10px;
-  color: #fff;
-}
-.hero-subtitle {
-  color: var(--text-muted);
-  font-size: 16px;
-  max-width: 640px;
-  margin: 0 auto 28px;
-}
-
-/* Stats Row */
-.stats-row {
+.mark {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-bottom: 32px;
-}
-.stat-box {
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
-  border-top: 1px solid var(--glass-border-highlight);
-  border-radius: 10px;
-  padding: 16px;
-  text-align: left;
-}
-.stat-num {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 2px;
-}
-.stat-label {
-  color: var(--text-muted);
-  font-size: 12px;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 0.82rem;
 }
 
-/* Liquid Navigation Tabs */
-.liquid-tabs {
+.brand span:last-child { overflow-wrap: anywhere; }
+
+.nav {
   display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 28px;
-  border-bottom: 1px solid var(--glass-border);
-  padding-bottom: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
   flex-wrap: wrap;
 }
-.tab-trigger {
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 16px;
+
+.nav a,
+.button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
+  padding: 0 14px;
+  text-decoration: none;
+  font-weight: 750;
+  color: #edf3ff;
+  background: rgba(255,255,255,0.04);
+  white-space: nowrap;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.nav a:hover,
+.button:hover {
+  border-color: rgba(255,255,255,0.26);
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+
+.hero {
+  min-height: calc(100svh - 68px);
+  display: grid;
+  align-items: center;
+  gap: 34px;
+  grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.78fr);
+  padding-block: 58px 34px;
+}
+
+.eyebrow {
+  width: max-content;
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-.tab-trigger:hover {
-  color: var(--text-main);
-  background: var(--glass-bg);
-}
-.tab-trigger.active {
-  color: #fff;
-  background: var(--glass-bg-hover);
-  border: 1px solid var(--glass-border-highlight);
+  border: 1px solid rgba(141,227,108,0.28);
+  border-radius: 999px;
+  padding: 7px 12px;
+  color: #c9f7b8;
+  background: rgba(141,227,108,0.08);
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
-/* Tab Panels */
-.panel { display: none; }
-.panel.active { display: block; }
-
-/* Liquid Glass Card */
-.glass-container {
-  background: var(--glass-bg);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border: 1px solid var(--glass-border);
-  border-top: 1px solid var(--glass-border-highlight);
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
+h1,
+h2,
+h3 {
+  margin: 0;
+  letter-spacing: 0;
+  line-height: 1.04;
 }
-.panel-header {
+
+h1 {
+  max-width: 780px;
+  margin-top: 20px;
+  font-size: 5.1rem;
+}
+
+.lead {
+  max-width: 720px;
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 1.16rem;
+}
+
+.actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
   flex-wrap: wrap;
   gap: 12px;
-}
-.panel-heading {
-  font-size: 17px;
-  font-weight: 700;
-}
-.panel-subtext {
-  font-size: 13px;
-  color: var(--text-muted);
+  margin-top: 28px;
 }
 
-/* Glass Buttons */
-.glass-btn {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border-highlight);
-  color: var(--text-main);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 16px;
+.button.primary {
+  border-color: rgba(255,255,255,0.28);
+  background: rgba(246,247,251,0.9);
+  color: #101114;
+}
+
+.button.secondary { background: rgba(255,255,255,0.06); }
+
+.button:disabled {
+  cursor: progress;
+  opacity: 0.66;
+  transform: none;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 42px;
+}
+
+.stat,
+.feature,
+.route-row,
+.console {
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.glass-btn:hover {
-  background: var(--glass-bg-hover);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-.glass-btn.btn-accent {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.glass-btn.btn-accent:hover {
-  background: var(--accent);
-  color: #000;
-}
-.glass-btn.btn-danger {
-  background: rgba(248, 113, 113, 0.12);
-  border-color: var(--coral);
-  color: var(--coral);
-}
-.glass-btn.btn-danger:hover {
-  background: var(--coral);
-  color: #000;
-}
-.glass-btn.btn-sm {
-  padding: 4px 10px;
-  font-size: 11px;
-  border-radius: 6px;
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
 }
 
-/* Key Generator Box */
-.key-glass-box {
-  background: rgba(6, 8, 12, 0.55);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  padding: 16px 20px;
-  margin-bottom: 20px;
+.stat {
+  min-height: 112px;
+  padding: 16px;
+  animation: fadeUp 520ms ease both;
 }
-.key-main-row {
+
+.stat:nth-child(2) { animation-delay: 70ms; }
+.stat:nth-child(3) { animation-delay: 140ms; }
+.stat:nth-child(4) { animation-delay: 210ms; }
+
+.stat:hover,
+.feature:hover,
+.route-row:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.24);
+  background: var(--glass-strong);
+}
+
+.stat strong {
+  display: block;
+  margin-bottom: 7px;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.stat span,
+.feature p,
+.section-copy,
+.route-row span:last-child,
+.footer {
+  color: var(--muted);
+}
+
+.console {
+  align-self: center;
+  overflow: hidden;
+  background: var(--glass-strong);
+  animation: floatPanel 6s ease-in-out infinite;
+}
+
+.console-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  min-height: 46px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: #dbe8f8;
+  font-weight: 850;
 }
-.key-text-large {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.5px;
-}
-.key-meta-bar {
-  display: flex;
-  gap: 18px;
-  font-size: 12px;
-  color: var(--text-muted);
-  align-items: center;
-}
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 4px;
-}
-.status-dot.green { background: var(--emerald); }
-.status-dot.red { background: var(--coral); }
-.status-dot.yellow { background: var(--yellow); }
 
-/* Code Snippets */
-.snippets-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 12px;
-  margin-top: 18px;
+.lights {
+  display: flex;
+  gap: 7px;
 }
-.code-card {
-  background: rgba(6, 8, 12, 0.55);
-  border: 1px solid var(--glass-border);
+
+.light {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--coral);
+}
+
+.light:nth-child(2) { background: var(--amber); }
+.light:nth-child(3) { background: var(--green); }
+
+pre {
+  margin: 0;
+  padding: 20px;
+  overflow-x: auto;
+  color: #eaf5ff;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+
+.route { color: var(--cyan); }
+.key { color: var(--amber); }
+.value { color: var(--green); }
+.note { color: var(--muted); }
+
+.section { padding-block: 64px; }
+
+.api-key-tab {
+  display: grid;
+  gap: 18px;
+}
+
+.tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.tab {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 8px;
+  padding: 0 14px;
+  background: rgba(255,255,255,0.06);
+  color: #edf3ff;
+  font-weight: 850;
+}
+
+.tab[aria-selected="true"] {
+  border-color: rgba(97,212,255,0.5);
+  background: rgba(97,212,255,0.13);
+  color: #d8f5ff;
+}
+
+.key-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(300px, 0.64fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.key-panel,
+.key-usage {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+}
+
+.key-panel {
+  padding: 20px;
+}
+
+.key-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.key-state {
+  color: var(--green);
+  font-weight: 850;
+}
+
+.key-output {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.11);
   border-radius: 8px;
   padding: 14px;
+  background: rgba(0,0,0,0.18);
+  color: #f8fbff;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
-.code-header {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 8px;
+
+.key-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.copy-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.copy-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.copy-line code {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.045);
+  color: #dbe8f8;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.copy-button {
+  width: 82px;
+  min-height: 44px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 8px;
+  background: rgba(246,247,251,0.9);
+  color: #101114;
+  font-weight: 900;
+}
+
+.key-usage {
+  padding: 20px;
+}
+
+.key-usage h3 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.key-usage pre {
+  border-radius: 8px;
+  background: rgba(0,0,0,0.2);
+}
+
+.section-head {
+  max-width: 780px;
+  margin-bottom: 26px;
+}
+
+h2 { font-size: 3rem; }
+
+.section-copy {
+  margin: 13px 0 0;
+  max-width: 690px;
+  font-size: 1.03rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.feature {
+  min-height: 210px;
+  padding: 22px;
+  animation: fadeUp 560ms ease both;
+}
+
+.feature:nth-child(2) { animation-delay: 70ms; }
+.feature:nth-child(3) { animation-delay: 140ms; }
+.feature:nth-child(4) { animation-delay: 210ms; }
+.feature:nth-child(5) { animation-delay: 280ms; }
+.feature:nth-child(6) { animation-delay: 350ms; }
+
+.hero > div,
+.section-head,
+.route-group {
+  animation: fadeUp 560ms ease both;
+}
+
+.feature-badge {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  color: #101114;
+  background: var(--amber);
+  font-weight: 850;
+}
+
+.feature:nth-child(2) .feature-badge { background: var(--cyan); }
+.feature:nth-child(3) .feature-badge { background: var(--green); }
+.feature:nth-child(4) .feature-badge { background: var(--coral); }
+.feature:nth-child(5) .feature-badge { background: var(--violet); }
+.feature:nth-child(6) .feature-badge { background: #f3f6ff; }
+
+.feature h3 {
+  margin-bottom: 10px;
+  font-size: 1.12rem;
+}
+
+.feature p { margin: 0; }
+
+.route-groups {
+  display: grid;
+  gap: 24px;
+}
+
+.route-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.route-head h3 { font-size: 1.35rem; }
+
+.route-head span {
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #101114;
+  background: #f3f6ff;
+  font-weight: 900;
+}
+
+.route-list {
+  display: grid;
+  gap: 8px;
+}
+
+.route-row {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 0.82fr) minmax(220px, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  text-decoration: none;
+}
+
+.method {
+  width: 56px;
+  border-radius: 7px;
+  padding: 5px 0;
+  text-align: center;
+  color: #081014;
+  background: #f3f6ff;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.route-row code {
+  overflow-wrap: anywhere;
+  color: #f8fbff;
+}
+
+.footer {
+  width: min(100% - 32px, 1180px);
+  margin: 0 auto;
+  padding: 26px 0 38px;
+  border-top: 1px solid rgba(255,255,255,0.08);
   display: flex;
   justify-content: space-between;
-  align-items: center;
-}
-.code-card pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
-  color: #cbd5e1;
-  overflow-x: auto;
-  line-height: 1.45;
-}
-
-/* Glass Inputs */
-.glass-input {
-  background: rgba(6, 8, 12, 0.6);
-  border: 1px solid var(--glass-border);
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-.glass-input:focus {
-  border-color: var(--accent);
-}
-
-/* Tables */
-.liquid-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
-  font-size: 13px;
-}
-.liquid-table th, .liquid-table td {
-  padding: 10px 14px;
-  text-align: left;
-  border-bottom: 1px solid var(--glass-border);
-}
-.liquid-table th {
-  color: var(--text-muted);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.status-badge {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 4px;
-  text-transform: uppercase;
-}
-.badge-active { background: rgba(52, 211, 153, 0.15); color: var(--emerald); }
-.badge-revoked { background: rgba(248, 113, 113, 0.15); color: var(--coral); }
-.revoked td { opacity: 0.45; text-decoration: line-through; }
-
-/* Music Explorer */
-.search-controls {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-.search-input-lg {
-  flex: 1;
-  background: rgba(6, 8, 12, 0.6);
-  border: 1px solid var(--glass-border);
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-}
-.search-input-lg:focus { border-color: var(--accent); }
-
-.songs-liquid-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 12px;
-  margin-bottom: 20px;
-}
-.liquid-song-card {
-  background: rgba(10, 14, 23, 0.5);
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  padding: 12px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-.card-art {
-  width: 52px;
-  height: 52px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-.card-meta { flex: 1; min-width: 0; }
-.card-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-artist { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-sub { font-size: 10px; color: var(--accent); margin-top: 2px; }
-
-/* Player */
-.player-box {
-  background: rgba(14, 20, 32, 0.65);
-  border: 1px solid var(--glass-border-highlight);
-  border-radius: 10px;
-  padding: 16px;
-  display: none;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 20px;
   flex-wrap: wrap;
 }
-.player-art {
-  width: 72px;
-  height: 72px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-.player-info { flex: 1; min-width: 200px; }
-.pill-link {
-  font-size: 11px;
-  color: var(--accent);
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid var(--glass-border);
-  padding: 3px 8px;
-  border-radius: 4px;
+
+.footer a {
+  color: var(--cyan);
   text-decoration: none;
-  font-weight: 600;
-  margin-right: 6px;
-}
-.pill-link:hover { background: var(--accent); color: #000; }
-
-/* Endpoints Catalog */
-.liquid-group {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  margin-bottom: 12px;
-  overflow: hidden;
-}
-.group-header {
-  padding: 10px 16px;
-  background: rgba(6, 8, 12, 0.4);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--glass-border);
-}
-.group-title { font-size: 13px; font-weight: 700; }
-.pill {
-  font-size: 10px;
-  color: var(--text-muted);
-  border: 1px solid var(--glass-border);
-  padding: 2px 6px;
-  border-radius: 10px;
-}
-.route-item {
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  font-size: 12px;
-}
-.route-item:last-child { border-bottom: none; }
-.method-tag {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--accent);
-  background: rgba(56, 189, 248, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-  min-width: 36px;
-  text-align: center;
-}
-.route-uri {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color: #fff;
-  font-weight: 600;
-}
-.route-desc {
-  color: var(--text-muted);
-  margin-left: auto;
+  font-weight: 850;
 }
 
-/* Footer */
-.liquid-footer {
-  border-top: 1px solid var(--glass-border);
-  padding: 28px 20px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-.liquid-footer a {
-  color: var(--accent);
-  text-decoration: none;
+@media (max-width: 920px) {
+  .hero {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    padding-top: 42px;
+  }
+
+  h1 { font-size: 3.5rem; }
+  h2 { font-size: 2.35rem; }
+
+  .stats,
+  .feature-grid,
+  .key-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .route-row {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .route-row span:last-child {
+    grid-column: 2;
+  }
 }
 
-/* Icons */
-.icon {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-  vertical-align: middle;
-}
-`
+@media (max-width: 640px) {
+  .topbar-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-block: 14px;
+  }
 
-// SVG Icon Helpers
-const KeyIcon = `<svg class="icon" viewBox="0 0 24 24"><path d="m21 2-2 2m-1.5 1.5L14 9l-2-2-4 4 2 2-4 4-2-2-2 2 4 4 2-2 2 2 4-4 2 2 4-4 2-2z"/></svg>`
-const MusicIcon = `<svg class="icon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`
-const ListIcon = `<svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`
-const LockIcon = `<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`
+  .nav { justify-content: flex-start; }
+
+  .nav a,
+  .button {
+    min-height: 36px;
+    padding-inline: 11px;
+    font-size: 0.92rem;
+  }
+
+  .stats,
+  .feature-grid,
+  .key-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-line {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-button {
+    width: 100%;
+  }
+
+  .route-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .route-row span:last-child {
+    grid-column: auto;
+  }
+
+  h1 { font-size: 2.45rem; }
+  h2 { font-size: 2rem; }
+  .lead { font-size: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}`
 
 Home.get('/', (c) => {
-  return c.html(`<!DOCTYPE html>
+  return c.html(`<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${escapeHtml(API_NAME)}</title>
-    <meta name="description" content="${escapeHtml(DESCRIPTION)}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="description" content="${escapeHtml(DESCRIPTION)}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="${escapeHtml(API_NAME)}">
+    <meta property="og:description" content="${escapeHtml(DESCRIPTION)}">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="${escapeHtml(API_NAME)}">
+    <meta property="twitter:description" content="${escapeHtml(DESCRIPTION)}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>${styles}</style>
   </head>
   <body>
-    <header class="liquid-nav">
-      <div class="nav-container">
-        <a class="brand-group" href="/">
-          <span class="brand-chip">Sh</span>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/" aria-label="${escapeHtml(API_NAME)}">
+          <span class="mark">SD</span>
           <span>${escapeHtml(API_NAME)}</span>
-          <span class="domain-pill">${escapeHtml(DISPLAY_DOMAIN)}</span>
         </a>
-        <nav class="header-links">
+        <nav class="nav" aria-label="Main navigation">
+          <a href="#api-key">API Key</a>
           <a href="/docs">Docs</a>
-          <a href="/swagger">Swagger</a>
-          <a href="/health">Health</a>
+          <a href="/swagger">OpenAPI</a>
+          <a href="/health">Status</a>
           <a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
       </div>
     </header>
 
-    <main class="container">
-      <section class="hero-block">
-        <h1 class="hero-title">ShnwazDev JioSaavn API</h1>
-        <p class="hero-subtitle">
-          Modern liquid glass API client and edge infrastructure for JioSaavn songs, 320kbps streams, albums, artists, and synced lyrics.
-        </p>
+    <main>
+      <section class="section hero">
+        <div>
+          <span class="eyebrow">Unofficial + No App Rate Limit</span>
+          <h1>Build faster with the ShnwazDev JioSaavn API</h1>
+          <p class="lead">
+            Access albums, artists, browse feeds, lyrics, playlists, podcasts, search, songs, and trending routes
+            through clean JSON responses, OpenAPI docs, and a Cloudflare-ready serverless API.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="/docs">Open Docs</a>
+            <a class="button secondary" href="#api-key">Generate API Key</a>
+            <a class="button secondary" href="/swagger">View OpenAPI</a>
+            <a class="button secondary" href="/api/endpoints">Endpoint Index</a>
+            <a class="button secondary" href="/api/limits">API Limits</a>
+          </div>
 
-        <div class="stats-row">
-          ${renderStats()}
+          <div class="stats">
+            ${renderStats()}
+          </div>
+        </div>
+
+        <aside class="console" aria-label="API response preview">
+          <div class="console-head">
+            <span>GET /api/search</span>
+            <span class="lights" aria-hidden="true">
+              <span class="light"></span>
+              <span class="light"></span>
+              <span class="light"></span>
+            </span>
+          </div>
+          <pre><code><span class="route">GET /api/search?query=Believer</span>
+
+${escapeHtml(exampleJson)}
+
+<span class="note">Docs: /docs  Schema: /swagger  Limits: /api/limits</span></code></pre>
+        </aside>
+      </section>
+
+      <section class="section api-key-tab" id="api-key" data-api-key-panel>
+        <div class="section-head">
+          <div class="tab-list" role="tablist" aria-label="API key tools">
+            <span class="tab" role="tab" aria-selected="true">API Key</span>
+            <a class="tab" role="tab" aria-selected="false" href="/docs">Docs</a>
+            <a class="tab" role="tab" aria-selected="false" href="/swagger">OpenAPI</a>
+          </div>
+          <h2>Generate your API key in real time</h2>
+          <p class="section-copy">
+            Click generate to receive a fresh Sh. key from <code>/apikey</code>. Use it on every protected
+            <code>/api/*</code> request.
+          </p>
+        </div>
+
+        <div class="key-grid">
+          <div class="key-panel">
+            <div class="key-toolbar">
+              <span class="key-state" data-key-status>Ready</span>
+              <button class="button primary" type="button" data-generate-key>Generate Key</button>
+            </div>
+            <code class="key-output" id="generated-api-key" data-key-output>Generating...</code>
+            <div class="key-meta">
+              <span>Prefix: <strong>Sh.</strong></span>
+              <span>Unique Code: <strong data-random-output>...</strong></span>
+              <span>Generated: <strong data-generated-at>...</strong></span>
+            </div>
+            <div class="copy-grid" aria-label="Copy API key examples">
+              <div class="copy-line">
+                <code id="copy-header" data-key-template="X-API-Key: {key}">X-API-Key: ...</code>
+                <button class="copy-button" type="button" data-copy-target="#copy-header">Copy</button>
+              </div>
+              <div class="copy-line">
+                <code id="copy-bearer" data-key-template="Authorization: Bearer {key}">Authorization: Bearer ...</code>
+                <button class="copy-button" type="button" data-copy-target="#copy-bearer">Copy</button>
+              </div>
+              <div class="copy-line">
+                <code id="copy-query" data-key-template="?apikey={encodedKey}">?apikey=...</code>
+                <button class="copy-button" type="button" data-copy-target="#copy-query">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="key-usage" aria-label="API key request example">
+            <h3>Use it fast</h3>
+            <pre><code><span class="route">GET /api/search/songs?query=Kesariya</span>
+<span class="key" data-key-template="X-API-Key: {key}">X-API-Key: ...</span>
+
+<span class="note">Or append the key:</span>
+<span class="route" data-key-template="/api/search/songs?query=Kesariya&amp;apikey={encodedKey}">/api/search/songs?query=Kesariya&amp;apikey=...</span></code></pre>
+          </aside>
         </div>
       </section>
 
-      <!-- Tabs Navigation -->
-      <nav class="liquid-tabs" role="tablist">
-        <button class="tab-trigger active" data-tab-btn="tab-keys">${KeyIcon} API Key</button>
-        <button class="tab-trigger" data-tab-btn="tab-explorer">${MusicIcon} Explorer & Player</button>
-        <button class="tab-trigger" data-tab-btn="tab-catalog">${ListIcon} Endpoints (47+)</button>
-        <button class="tab-trigger" data-tab-btn="tab-admin">${LockIcon} Admin Panel</button>
-      </nav>
-
-      <!-- Tab 1: Key Generator -->
-      <div class="panel active" id="tab-keys" data-tab-panel>
-        <div class="glass-container">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-heading">Generate API Key</h2>
-              <p class="panel-subtext">Instant Sh.Qre format key for your application</p>
-            </div>
-            <button class="glass-btn btn-accent" id="btn-gen-key">Generate New Key</button>
-          </div>
-
-          <div class="key-glass-box">
-            <div class="key-main-row">
-              <span class="key-text-large" id="key-display-text">Generating...</span>
-              <div style="display: flex; gap: 8px;">
-                <button class="glass-btn btn-sm" onclick="window.copyValue(document.getElementById('key-display-text').textContent, this)">Copy Key</button>
-                <button class="glass-btn btn-sm" onclick="window.testCurrentKey()">Test Live</button>
-              </div>
-            </div>
-            <div class="key-meta-bar">
-              <span>Format: <strong>Sh.&lt;code&gt;</strong></span>
-              <span id="key-test-feedback"><span class="status-dot green"></span> Ready</span>
-            </div>
-          </div>
-
-          <div class="snippets-row">
-            <div class="code-card">
-              <div class="code-header"><span>cURL Request</span><button class="glass-btn btn-sm" onclick="window.copyValue(this.closest('.code-card').querySelector('pre').textContent, this)">Copy</button></div>
-              <pre><code data-code-snippet="curl -X GET 'https://${DISPLAY_DOMAIN}/api/search?query=Believer' \\
-  -H 'X-API-Key: {KEY}'">curl -X GET 'https://${DISPLAY_DOMAIN}/api/search?query=Believer' \
-  -H 'X-API-Key: ...'</code></pre>
-            </div>
-
-            <div class="code-card">
-              <div class="code-header"><span>JavaScript Fetch</span><button class="glass-btn btn-sm" onclick="window.copyValue(this.closest('.code-card').querySelector('pre').textContent, this)">Copy</button></div>
-              <pre><code data-code-snippet="const res = await fetch('https://${DISPLAY_DOMAIN}/api/songs?ids=csaAEio2', {
-  headers: { 'X-API-Key': '{KEY}' }
-});
-const data = await res.json();">const res = await fetch('https://${DISPLAY_DOMAIN}/api/songs?ids=csaAEio2', {
-  headers: { 'X-API-Key': '...' }
-});</code></pre>
-            </div>
-
-            <div class="code-card">
-              <div class="code-header"><span>Python Requests</span><button class="glass-btn btn-sm" onclick="window.copyValue(this.closest('.code-card').querySelector('pre').textContent, this)">Copy</button></div>
-              <pre><code data-code-snippet="import requests
-
-res = requests.get(
-    'https://${DISPLAY_DOMAIN}/api/search/songs',
-    params={'query': 'Believer'},
-    headers={'X-API-Key': '{KEY}'}
-)
-print(res.json())">import requests
-# headers={'X-API-Key': '...'}</code></pre>
-            </div>
-          </div>
+      <section class="section" id="features">
+        <div class="section-head">
+          <h2>Clean API surface for music apps</h2>
+          <p class="section-copy">
+            The website, metadata, docs, and API responses are branded for shnwazdev while keeping the route structure
+            simple to host and extend on Cloudflare Workers.
+          </p>
         </div>
-      </div>
-
-      <!-- Tab 2: Explorer & Player -->
-      <div class="panel" id="tab-explorer" data-tab-panel>
-        <div class="glass-container">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-heading">Live Search & 320kbps Player</h2>
-              <p class="panel-subtext">Search tracks and listen directly on Cloudflare Edge</p>
-            </div>
-          </div>
-
-          <div class="search-controls">
-            <input type="text" class="search-input-lg" id="search-query-input" placeholder="Search track name, artist, album (e.g. Believer, Kesariya)..." value="Believer" />
-            <button class="glass-btn btn-accent" id="search-action-btn">Search</button>
-          </div>
-
-          <!-- Liquid Audio Player -->
-          <div class="player-box" id="liquid-player">
-            <img id="player-cover-art" class="player-art" src="" alt="Album Art" />
-            <div class="player-info">
-              <div id="player-track-title" style="font-weight: 700; font-size: 15px; margin-bottom: 2px;">Track</div>
-              <div id="player-track-artist" style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Artist</div>
-              <audio id="stream-audio-elem" controls style="width: 100%; height: 32px;"></audio>
-              <div id="player-dl-links" style="margin-top: 8px;"></div>
-            </div>
-          </div>
-
-          <div class="songs-liquid-grid" id="search-results-grid"></div>
-
-          <div style="font-size: 12px; color: var(--text-muted); margin: 16px 0 6px;">JSON Output</div>
-          <pre style="background: rgba(6,8,12,0.6); padding: 14px; border-radius: 8px; border: 1px solid var(--glass-border); max-height: 200px; overflow: auto; font-size: 11px; color: var(--accent);"><code id="raw-json-box">// Search above to inspect live payload</code></pre>
+        <div class="feature-grid">
+          ${renderFeatures()}
         </div>
-      </div>
+      </section>
 
-      <!-- Tab 3: Endpoints Catalog -->
-      <div class="panel" id="tab-catalog" data-tab-panel>
-        <div class="glass-container">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-heading">Endpoint Catalog (47+ Routes)</h2>
-              <p class="panel-subtext">Comprehensive listing of all API resources</p>
-            </div>
-            <input type="text" id="routes-search-filter" class="glass-input" placeholder="Filter routes..." style="width: 220px;" />
-          </div>
-
-          <div>
-            ${renderRouteGroups()}
-          </div>
+      <section class="section" id="endpoints">
+        <div class="section-head">
+          <h2>All requested endpoints</h2>
+          <p class="section-copy">
+            Use these routes from your deployed Cloudflare URL. Query details and live testing are also available in the docs.
+          </p>
         </div>
-      </div>
-
-      <!-- Tab 4: Admin Panel -->
-      <div class="panel" id="tab-admin" data-tab-panel>
-        <div class="glass-container">
-          <div class="panel-header">
-            <div>
-              <h2 class="panel-heading">Admin Key Management</h2>
-              <p class="panel-subtext">Restricted panel to rework, revoke, and manage all active keys</p>
-            </div>
-          </div>
-
-          <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
-            <input type="password" id="admin-pass-input" class="glass-input" placeholder="Enter Admin Secret" value="shnwazdev-admin" style="width: 260px;" />
-            <button class="glass-btn btn-accent" id="admin-login-btn">Unlock Admin Panel</button>
-            <span id="admin-msg" style="font-size: 12px;"></span>
-          </div>
-
-          <div id="admin-table-container" style="display: none; overflow-x: auto;">
-            <table class="liquid-table">
-              <thead>
-                <tr>
-                  <th>API Key</th>
-                  <th>Status</th>
-                  <th>Issued</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="admin-table-body"></tbody>
-            </table>
-          </div>
+        <div class="route-groups">
+          ${renderRouteGroups()}
         </div>
-      </div>
+      </section>
     </main>
 
-    <footer class="liquid-footer">
-      <p>Built with Hono, TypeScript, OpenAPI on Cloudflare Workers.</p>
-      <p style="margin-top: 6px;"><a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">GitHub</a> • <a href="/docs">Scalar Docs</a> • <a href="/swagger">Swagger</a></p>
+    <footer class="footer">
+      <span>Built with Hono, TypeScript, OpenAPI, and Cloudflare Workers.</span>
+      <a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">shnwazdev repo</a>
     </footer>
-
-    <script>${clientScript}</script>
+    <script>${apiKeyScript}</script>
   </body>
 </html>`)
 })
