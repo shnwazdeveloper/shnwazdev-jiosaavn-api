@@ -4,9 +4,9 @@ export const Home = new Hono()
 
 const API_NAME = 'ShnwazDev JioSaavn API'
 const REPOSITORY_URL = 'https://github.com/shnwazdeveloper/shnwazdev-jiosaavn-api'
-const CUSTOM_DOMAIN = 'Sh.Jio.dev'
+const DISPLAY_DOMAIN = 'Sh.jio.workers.dev'
 const DESCRIPTION =
-  'ShnwazDev JioSaavn API is an ultra-fast TypeScript API for songs, albums, artists, playlists, search, and recommendations on Cloudflare Workers.'
+  'High-performance TypeScript music streaming and metadata API on Cloudflare Edge.'
 
 type RouteItem = {
   method: string
@@ -20,118 +20,85 @@ type RouteGroup = {
   routes: RouteItem[]
 }
 
-const features = [
-  {
-    label: '⚡',
-    title: 'Cloudflare Edge',
-    body: 'Deployed globally on Cloudflare Workers with minimal latency and instant cold starts.'
-  },
-  {
-    label: '🔑',
-    title: 'Sh. Key Generator',
-    body: 'Generate, test, manage, and revoke unique Sh. API keys with 3-digit randomized identifiers.'
-  },
-  {
-    label: '🎵',
-    title: '320kbps Hi-Fi Audio',
-    body: 'Direct decrypted streaming and high-bitrate download links (320kbps, 160kbps, 96kbps, 48kbps).'
-  },
-  {
-    label: '🔍',
-    title: 'Global Search',
-    body: 'Search across songs, albums, artists, playlists, and top-query suggestions in real time.'
-  },
-  {
-    label: '📜',
-    title: 'Synced Lyrics',
-    body: 'Fetch rich synchronized time-stamped lyrics, artist recommendations, and podcast episodes.'
-  },
-  {
-    label: '📖',
-    title: 'OpenAPI 3.1 & Scalar',
-    body: 'Interactive Swagger and Scalar API documentation generated automatically.'
-  }
-]
-
 const stats = [
-  ['47+ Music Routes', 'Albums, artists, browse, lyrics, playlists, podcasts, search, songs, trending'],
-  ['Cloudflare Workers', 'Global Edge network on custom domain Sh.Jio.dev'],
-  ['Sh. API Keys', 'Signed secure tokens with 3-digit random codes & revocation'],
-  ['OpenAPI 3.1', 'Interactive Scalar docs and Swagger JSON schema']
+  ['47+ Routes', 'Albums, artists, browse, lyrics, playlists, podcasts, search, songs, trending'],
+  ['Cloudflare Edge', 'Zero cold-start global edge distribution with nodejs_compat'],
+  ['Sh. Keys', 'Compact 3-character random alphanumeric key format'],
+  ['OpenAPI 3.1', 'Interactive Scalar documentation & Swagger schemas']
 ]
 
 const routeGroups: RouteGroup[] = [
   {
     name: 'Album',
     count: 1,
-    routes: [{ method: 'GET', path: '/api/albums?id={id}', description: 'Retrieve an album by ID or link' }]
+    routes: [{ method: 'GET', path: '/api/albums?id={id}', description: 'Retrieve album by ID or JioSaavn URL' }]
   },
   {
     name: 'Artists',
     count: 6,
     routes: [
       { method: 'GET', path: '/api/artists?id={id}', description: 'Retrieve artists by ID or link' },
-      { method: 'GET', path: '/api/artists/{id}', description: 'Retrieve artist by ID' },
-      { method: 'GET', path: '/api/artists/{id}/albums', description: "Retrieve artist's albums" },
+      { method: 'GET', path: '/api/artists/{id}', description: 'Retrieve artist overview by ID' },
+      { method: 'GET', path: '/api/artists/{id}/albums', description: "Retrieve artist albums" },
       { method: 'GET', path: '/api/artists/{id}/related', description: 'Retrieve related artists' },
-      { method: 'GET', path: '/api/artists/{id}/songs', description: "Retrieve artist's songs" },
-      { method: 'GET', path: '/api/artists/by-name?name={name}', description: 'Retrieve artist by name' }
+      { method: 'GET', path: '/api/artists/{id}/songs', description: "Retrieve artist songs" },
+      { method: 'GET', path: '/api/artists/by-name?name={name}', description: 'Retrieve artist by name query' }
     ]
   },
   {
     name: 'Browse',
     count: 16,
     routes: [
-      { method: 'GET', path: '/api/channels', description: 'Retrieve channels' },
-      { method: 'GET', path: '/api/channels/{id}', description: 'Retrieve channel detail' },
-      { method: 'GET', path: '/api/charts', description: 'Retrieve JioSaavn charts' },
-      { method: 'GET', path: '/api/discover', description: 'Retrieve discover channels' },
-      { method: 'GET', path: '/api/genres', description: 'Retrieve genre channels' },
-      { method: 'GET', path: '/api/home', description: 'Retrieve the JioSaavn home feed' },
+      { method: 'GET', path: '/api/channels', description: 'Retrieve browse channels' },
+      { method: 'GET', path: '/api/channels/{id}', description: 'Retrieve channel details' },
+      { method: 'GET', path: '/api/charts', description: 'Retrieve top trending charts' },
+      { method: 'GET', path: '/api/discover', description: 'Retrieve discover modules' },
+      { method: 'GET', path: '/api/genres', description: 'Retrieve music genres' },
+      { method: 'GET', path: '/api/home', description: 'Retrieve full JioSaavn home feed' },
       { method: 'GET', path: '/api/home/artist-recommendations', description: 'Retrieve home artist recommendations' },
-      { method: 'GET', path: '/api/home/city-modules', description: 'Retrieve home city modules' },
-      { method: 'GET', path: '/api/home/modules', description: 'Retrieve home feed module metadata' },
+      { method: 'GET', path: '/api/home/city-modules', description: 'Retrieve city trending modules' },
+      { method: 'GET', path: '/api/home/modules', description: 'Retrieve feed module metadata' },
       { method: 'GET', path: '/api/home/promos', description: 'Retrieve editorial promo groups' },
-      { method: 'GET', path: '/api/moods', description: 'Retrieve mood channels' },
-      { method: 'GET', path: '/api/music-plus', description: 'Retrieve music plus channels' },
-      { method: 'GET', path: '/api/radio', description: 'Retrieve radio stations' },
-      { method: 'GET', path: '/api/radio/{id}', description: 'Retrieve radio station detail payload' },
-      { method: 'GET', path: '/api/radio/artists', description: 'Retrieve artist radio recommendations' },
-      { method: 'GET', path: '/api/radio/featured', description: 'Retrieve featured radio stations' }
+      { method: 'GET', path: '/api/moods', description: 'Retrieve mood categories' },
+      { method: 'GET', path: '/api/music-plus', description: 'Retrieve music plus stations' },
+      { method: 'GET', path: '/api/radio', description: 'Retrieve radio categories' },
+      { method: 'GET', path: '/api/radio/{id}', description: 'Retrieve radio station payload' },
+      { method: 'GET', path: '/api/radio/artists', description: 'Retrieve artist radio stations' },
+      { method: 'GET', path: '/api/radio/featured', description: 'Retrieve featured stations' }
     ]
   },
   {
     name: 'Lyrics',
     count: 3,
     routes: [
-      { method: 'GET', path: '/api/lyrics?query={query}', description: 'Retrieve lyrics by song name' },
-      { method: 'GET', path: '/api/lyrics/{id}', description: 'Retrieve lyrics by song or lyrics ID' },
-      { method: 'GET', path: '/api/lyrics/{id}/sync', description: 'Retrieve synced lyrics payload' }
+      { method: 'GET', path: '/api/lyrics?query={query}', description: 'Retrieve lyrics by song title' },
+      { method: 'GET', path: '/api/lyrics/{id}', description: 'Retrieve lyrics by song ID' },
+      { method: 'GET', path: '/api/lyrics/{id}/sync', description: 'Retrieve synchronized time-stamped lyrics' }
     ]
   },
   {
     name: 'Playlist',
     count: 1,
-    routes: [{ method: 'GET', path: '/api/playlists?id={id}', description: 'Retrieve a playlist by ID or link' }]
+    routes: [{ method: 'GET', path: '/api/playlists?id={id}', description: 'Retrieve playlist by ID or link' }]
   },
   {
     name: 'Podcasts',
     count: 3,
     routes: [
-      { method: 'GET', path: '/api/episodes/{id}', description: 'Retrieve a podcast episode by ID' },
+      { method: 'GET', path: '/api/episodes/{id}', description: 'Retrieve podcast episode details' },
       { method: 'GET', path: '/api/podcasts?id={id}', description: 'Retrieve podcast show by ID or link' },
-      { method: 'GET', path: '/api/podcasts/{id}', description: 'Retrieve podcast show detail' }
+      { method: 'GET', path: '/api/podcasts/{id}', description: 'Retrieve show detail and episodes' }
     ]
   },
   {
     name: 'Search',
     count: 6,
     routes: [
-      { method: 'GET', path: '/api/search?query={query}', description: 'Global search' },
-      { method: 'GET', path: '/api/search/albums?query={query}', description: 'Search for albums' },
-      { method: 'GET', path: '/api/search/artists?query={query}', description: 'Search for artists' },
-      { method: 'GET', path: '/api/search/playlists?query={query}', description: 'Search for playlists' },
-      { method: 'GET', path: '/api/search/songs?query={query}', description: 'Search for songs' },
+      { method: 'GET', path: '/api/search?query={query}', description: 'Global unified search' },
+      { method: 'GET', path: '/api/search/albums?query={query}', description: 'Search albums' },
+      { method: 'GET', path: '/api/search/artists?query={query}', description: 'Search artists' },
+      { method: 'GET', path: '/api/search/playlists?query={query}', description: 'Search playlists' },
+      { method: 'GET', path: '/api/search/songs?query={query}', description: 'Search songs with pagination' },
       { method: 'GET', path: '/api/search/top-query?query={query}', description: 'Search top query bucket' }
     ]
   },
@@ -139,18 +106,18 @@ const routeGroups: RouteGroup[] = [
     name: 'Songs',
     count: 5,
     routes: [
-      { method: 'GET', path: '/api/songs?ids={ids}', description: 'Retrieve songs by ID or link' },
-      { method: 'GET', path: '/api/songs/{id}', description: 'Retrieve song by ID' },
-      { method: 'GET', path: '/api/songs/{id}/ringtone', description: 'Retrieve ringtone preview details' },
-      { method: 'GET', path: '/api/songs/{id}/share', description: 'Retrieve a shareable song link' },
-      { method: 'GET', path: '/api/songs/{id}/suggestions', description: 'Retrieve song suggestions' }
+      { method: 'GET', path: '/api/songs?ids={ids}', description: 'Retrieve songs by IDs' },
+      { method: 'GET', path: '/api/songs/{id}', description: 'Retrieve song details by ID' },
+      { method: 'GET', path: '/api/songs/{id}/ringtone', description: 'Retrieve ringtone preview' },
+      { method: 'GET', path: '/api/songs/{id}/share', description: 'Retrieve shareable link' },
+      { method: 'GET', path: '/api/songs/{id}/suggestions', description: 'Retrieve song recommendations' }
     ]
   },
   {
     name: 'Trending',
     count: 6,
     routes: [
-      { method: 'GET', path: '/api/trending', description: 'Retrieve all browse feeds in one response' },
+      { method: 'GET', path: '/api/trending', description: 'Retrieve all trending items' },
       { method: 'GET', path: '/api/trending/albums', description: 'Retrieve trending albums' },
       { method: 'GET', path: '/api/trending/artists', description: 'Retrieve trending artists' },
       { method: 'GET', path: '/api/trending/playlists', description: 'Retrieve trending playlists' },
@@ -172,21 +139,9 @@ const renderStats = () =>
   stats
     .map(
       ([title, body]) => `
-        <div class="stat-card">
-          <div class="stat-title">${escapeHtml(title)}</div>
-          <div class="stat-desc">${escapeHtml(body)}</div>
-        </div>`
-    )
-    .join('')
-
-const renderFeatures = () =>
-  features
-    .map(
-      (feature) => `
-        <div class="feature-card">
-          <div class="feature-icon">${escapeHtml(feature.label)}</div>
-          <h3 class="feature-title">${escapeHtml(feature.title)}</h3>
-          <p class="feature-body">${escapeHtml(feature.body)}</p>
+        <div class="stat-box">
+          <div class="stat-num">${escapeHtml(title)}</div>
+          <div class="stat-label">${escapeHtml(body)}</div>
         </div>`
     )
     .join('')
@@ -195,18 +150,18 @@ const renderRouteGroups = () =>
   routeGroups
     .map(
       (group) => `
-        <div class="route-group" data-group="${escapeHtml(group.name.toLowerCase())}">
-          <div class="route-group-header">
-            <h3>${escapeHtml(group.name)}</h3>
-            <span class="badge">${group.count} ${group.count === 1 ? 'route' : 'routes'}</span>
+        <div class="liquid-group">
+          <div class="group-header">
+            <span class="group-title">${escapeHtml(group.name)}</span>
+            <span class="pill">${group.count} ${group.count === 1 ? 'endpoint' : 'endpoints'}</span>
           </div>
-          <div class="route-table">
+          <div class="group-rows">
             ${group.routes
               .map(
                 (route) => `
-                  <div class="route-row">
-                    <span class="method-tag ${escapeHtml(route.method.toLowerCase())}">${escapeHtml(route.method)}</span>
-                    <code class="route-path">${escapeHtml(route.path)}</code>
+                  <div class="route-item">
+                    <span class="method-tag">${escapeHtml(route.method)}</span>
+                    <code class="route-uri">${escapeHtml(route.path)}</code>
                     <span class="route-desc">${escapeHtml(route.description)}</span>
                   </div>`
               )
@@ -218,17 +173,18 @@ const renderRouteGroups = () =>
 
 const clientScript = `
 (() => {
-  var tabButtons = document.querySelectorAll('[data-tab-target]');
+  // Tabs Switcher
+  var tabButtons = document.querySelectorAll('[data-tab-btn]');
   var tabPanels = document.querySelectorAll('[data-tab-panel]');
 
   function switchTab(targetId) {
-    tabButtons.forEach(function(btn) {
-      var active = btn.getAttribute('data-tab-target') === targetId;
-      btn.classList.toggle('active', active);
-      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    tabButtons.forEach(function(b) {
+      var match = b.getAttribute('data-tab-btn') === targetId;
+      b.classList.toggle('active', match);
+      b.setAttribute('aria-selected', match ? 'true' : 'false');
     });
-    tabPanels.forEach(function(panel) {
-      panel.classList.toggle('active', panel.id === targetId);
+    tabPanels.forEach(function(p) {
+      p.classList.toggle('active', p.id === targetId);
     });
     if (history.replaceState) {
       history.replaceState(null, '', '#' + targetId);
@@ -238,296 +194,278 @@ const clientScript = `
   tabButtons.forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
-      switchTab(btn.getAttribute('data-tab-target'));
+      switchTab(btn.getAttribute('data-tab-btn'));
     });
   });
 
   if (window.location.hash) {
-    var hash = window.location.hash.replace('#', '');
-    if (document.getElementById(hash)) {
-      switchTab(hash);
+    var initialHash = window.location.hash.replace('#', '');
+    if (document.getElementById(initialHash)) {
+      switchTab(initialHash);
     }
   }
 
-  var STORAGE_KEY = 'shnwaz_api_keys_v1';
-  function getStoredKeys() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    } catch (e) {
-      return [];
-    }
-  }
-  function saveStoredKeys(keys) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(keys));
-  }
+  // Key Generation
+  var currentApiKey = '';
+  var keyDisplay = document.getElementById('key-display-text');
+  var keyGenBtn = document.getElementById('btn-gen-key');
+  var testResultEl = document.getElementById('key-test-feedback');
 
-  var activeApiKey = '';
-  var keyOutput = document.getElementById('gen-key-display');
-  var codeBadge = document.getElementById('gen-3digit-badge');
-  var statusBadge = document.getElementById('gen-status-badge');
-  var timeBadge = document.getElementById('gen-time-badge');
-  var generateBtn = document.getElementById('btn-generate-key');
-  var keysTableBody = document.getElementById('keys-table-body');
-
-  function updateSnippetTemplates(key) {
-    activeApiKey = key;
-    document.querySelectorAll('[data-snippet-key]').forEach(function(el) {
-      var template = el.getAttribute('data-snippet-key');
-      el.textContent = template.split('{key}').join(key || 'Sh.000-XXXXXXXXX-XXXXXX-XXXXXX');
+  function updateTemplates(key) {
+    currentApiKey = key;
+    document.querySelectorAll('[data-code-snippet]').forEach(function(el) {
+      var raw = el.getAttribute('data-code-snippet');
+      el.textContent = raw.split('{KEY}').join(key || 'Sh.Qre');
     });
   }
 
-  function renderKeysTable() {
-    if (!keysTableBody) return;
-    var keys = getStoredKeys();
-    if (keys.length === 0) {
-      keysTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 24px;">No API keys generated yet. Click "Generate New Sh. Key" above!</td></tr>';
-      return;
-    }
-
-    var html = '';
-    for (var i = 0; i < keys.length; i++) {
-      var item = keys[i];
-      var rowClass = item.revoked ? 'revoked-row' : '';
-      var badgeClass = item.revoked ? 'badge-revoked' : 'badge-active';
-      var badgeText = item.revoked ? 'Revoked' : 'Active';
-      var revokeOrDelete = !item.revoked
-        ? '<button class="btn-sm btn-danger" onclick="window.revokeKey(' + JSON.stringify(item.apiKey) + ')">Revoke</button>'
-        : '<button class="btn-sm btn-outline" onclick="window.removeKey(' + JSON.stringify(item.apiKey) + ')">Delete</button>';
-
-      html += '<tr class="' + rowClass + '">' +
-        '<td><span class="code-badge">' + (item.code3Digit || '---') + '</span></td>' +
-        '<td><code class="table-key-text">' + item.apiKey + '</code></td>' +
-        '<td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>' +
-        '<td style="color: var(--muted); font-size: 12px;">' + (item.createdAt || 'Recent') + '</td>' +
-        '<td class="action-cell">' +
-          '<button class="btn-sm btn-secondary" onclick="window.copyText(' + JSON.stringify(item.apiKey) + ', this)">Copy</button>' +
-          revokeOrDelete +
-          '<button class="btn-sm btn-primary" onclick="window.testLiveKey(' + JSON.stringify(item.apiKey) + ')">Test</button>' +
-        '</td>' +
-      '</tr>';
-    }
-    keysTableBody.innerHTML = html;
-  }
-
-  async function generateNewKey() {
-    if (generateBtn) generateBtn.disabled = true;
-    if (statusBadge) statusBadge.textContent = 'Generating...';
+  async function generateKey() {
+    if (keyGenBtn) keyGenBtn.disabled = true;
+    if (keyDisplay) keyDisplay.textContent = 'Generating...';
 
     try {
       var res = await fetch('/apikey', { cache: 'no-store' });
       var json = await res.json();
       if (json.success && json.data) {
-        var keyData = json.data;
-        if (keyOutput) keyOutput.textContent = keyData.apiKey;
-        if (codeBadge) codeBadge.textContent = '3-Digit Code: ' + (keyData.code3Digit || 'Sh');
-        if (statusBadge) {
-          statusBadge.textContent = 'Active';
-          statusBadge.className = 'badge badge-active';
-        }
-        if (timeBadge) timeBadge.textContent = new Date().toLocaleTimeString();
-
-        updateSnippetTemplates(keyData.apiKey);
-
-        var currentKeys = getStoredKeys();
-        currentKeys.unshift({
-          apiKey: keyData.apiKey,
-          code3Digit: keyData.code3Digit,
-          revoked: false,
-          createdAt: new Date().toLocaleTimeString()
-        });
-        saveStoredKeys(currentKeys.slice(0, 20));
-        renderKeysTable();
+        var key = json.data.apiKey;
+        if (keyDisplay) keyDisplay.textContent = key;
+        updateTemplates(key);
+        if (testResultEl) testResultEl.innerHTML = '<span class="status-dot green"></span> Active & Ready';
       }
-    } catch (err) {
-      if (statusBadge) {
-        statusBadge.textContent = 'Error';
-        statusBadge.className = 'badge badge-revoked';
-      }
+    } catch (e) {
+      if (keyDisplay) keyDisplay.textContent = 'Error';
     } finally {
-      if (generateBtn) generateBtn.disabled = false;
+      if (keyGenBtn) keyGenBtn.disabled = false;
     }
   }
 
-  window.copyText = async function(text, btn) {
+  window.copyValue = async function(text, btn) {
     if (!text) return;
     await navigator.clipboard.writeText(text);
     if (btn) {
-      var orig = btn.textContent;
-      btn.textContent = '✓ Copied';
-      setTimeout(function() { btn.textContent = orig; }, 1200);
+      var prev = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(function() { btn.textContent = prev; }, 1200);
     }
   };
 
-  window.revokeKey = async function(key) {
-    if (!confirm('Are you sure you want to revoke this API key? It will immediately stop working on all /api routes.')) return;
-    try {
-      await fetch('/apikey/revoke', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: key })
-      });
-      var keys = getStoredKeys();
-      for (var i = 0; i < keys.length; i++) {
-        if (keys[i].apiKey === key) keys[i].revoked = true;
-      }
-      saveStoredKeys(keys);
-      renderKeysTable();
-      alert('Key revoked successfully!');
-    } catch (e) {
-      alert('Failed to revoke key: ' + e.message);
+  window.testCurrentKey = async function() {
+    if (!currentApiKey) {
+      alert('Please generate a key first.');
+      return;
     }
-  };
+    if (testResultEl) testResultEl.innerHTML = '<span class="status-dot yellow"></span> Testing key...';
 
-  window.removeKey = function(key) {
-    var keys = getStoredKeys().filter(function(k) { return k.apiKey !== key; });
-    saveStoredKeys(keys);
-    renderKeysTable();
-  };
-
-  window.testLiveKey = async function(key) {
-    var outputEl = document.getElementById('test-key-result');
-    if (outputEl) outputEl.innerHTML = '<span style="color: var(--cyan)">Testing ' + key + '...</span>';
     try {
       var start = performance.now();
       var res = await fetch('/api/endpoints', {
-        headers: { 'X-API-Key': key }
+        headers: { 'X-API-Key': currentApiKey }
       });
-      var time = Math.round(performance.now() - start);
-      var data = await res.json();
+      var latency = Math.round(performance.now() - start);
       if (res.ok) {
-        if (outputEl) outputEl.innerHTML = '<span style="color: var(--green)">✓ 200 OK (' + time + 'ms) - Key Valid!</span>';
+        if (testResultEl) testResultEl.innerHTML = '<span class="status-dot green"></span> 200 OK (' + latency + 'ms) - Authenticated';
       } else {
-        if (outputEl) outputEl.innerHTML = '<span style="color: var(--coral)">✗ ' + res.status + ' ' + (data.message || 'Unauthorized') + '</span>';
+        var data = await res.json().catch(function() { return {}; });
+        if (testResultEl) testResultEl.innerHTML = '<span class="status-dot red"></span> ' + res.status + ' ' + (data.message || 'Unauthorized');
       }
     } catch (err) {
-      if (outputEl) outputEl.innerHTML = '<span style="color: var(--coral)">✗ Network error: ' + err.message + '</span>';
+      if (testResultEl) testResultEl.innerHTML = '<span class="status-dot red"></span> Connection Failed';
     }
   };
 
-  if (generateBtn) generateBtn.addEventListener('click', generateNewKey);
-  renderKeysTable();
+  if (keyGenBtn) keyGenBtn.addEventListener('click', generateKey);
+  generateKey();
 
-  if (getStoredKeys().length === 0) {
-    generateNewKey();
-  } else {
-    var first = getStoredKeys()[0];
-    if (keyOutput) keyOutput.textContent = first.apiKey;
-    if (codeBadge) codeBadge.textContent = '3-Digit Code: ' + (first.code3Digit || '---');
-    if (statusBadge) {
-      statusBadge.textContent = first.revoked ? 'Revoked' : 'Active';
-      statusBadge.className = 'badge ' + (first.revoked ? 'badge-revoked' : 'badge-active');
+  // Admin Panel (Protected Revoke / Management)
+  var adminPassInput = document.getElementById('admin-pass-input');
+  var adminLoginBtn = document.getElementById('admin-login-btn');
+  var adminTableContainer = document.getElementById('admin-table-container');
+  var adminTableBody = document.getElementById('admin-table-body');
+  var adminMsgEl = document.getElementById('admin-msg');
+  var currentAdminSecret = '';
+
+  async function loadAdminKeys() {
+    var pass = (adminPassInput && adminPassInput.value.trim()) || currentAdminSecret;
+    if (!pass) {
+      if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--coral);">Admin passcode required</span>';
+      return;
     }
-    updateSnippetTemplates(first.apiKey);
-  }
-
-  // Interactive Live Explorer & Audio Player
-  var searchInput = document.getElementById('explorer-search-input');
-  var searchBtn = document.getElementById('explorer-search-btn');
-  var searchResults = document.getElementById('explorer-results');
-  var playerCard = document.getElementById('explorer-player-card');
-  var audioEl = document.getElementById('audio-stream-player');
-  var playerArt = document.getElementById('player-art');
-  var playerTitle = document.getElementById('player-title');
-  var playerArtist = document.getElementById('player-artist');
-  var downloadLinksEl = document.getElementById('player-download-links');
-  var jsonViewer = document.getElementById('explorer-json-viewer');
-
-  async function performSearch() {
-    var query = (searchInput && searchInput.value.trim()) || 'Believer';
-    if (!activeApiKey && getStoredKeys().length > 0) {
-      activeApiKey = getStoredKeys()[0].apiKey;
-    }
-
-    if (searchResults) searchResults.innerHTML = '<div style="padding: 20px; color: var(--cyan);">Searching for "' + query + '"...</div>';
 
     try {
-      var res = await fetch('/api/search/songs?query=' + encodeURIComponent(query), {
-        headers: activeApiKey ? { 'X-API-Key': activeApiKey } : {}
+      var res = await fetch('/api/admin/keys?secret=' + encodeURIComponent(pass));
+      var json = await res.json();
+      if (!res.ok || !json.success) {
+        if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--coral);">' + (json.message || 'Unauthorized passcode') + '</span>';
+        return;
+      }
+
+      currentAdminSecret = pass;
+      if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--emerald);">Admin authenticated</span>';
+      if (adminTableContainer) adminTableContainer.style.display = 'block';
+
+      var keys = json.data || [];
+      if (keys.length === 0) {
+        adminTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px; color: var(--muted);">No keys generated yet</td></tr>';
+        return;
+      }
+
+      var html = '';
+      for (var i = 0; i < keys.length; i++) {
+        var item = keys[i];
+        var actionBtn = item.revoked
+          ? '<button class="glass-btn btn-sm" onclick="window.adminUnrevokeKey(' + JSON.stringify(item.apiKey) + ')">Restore</button>'
+          : '<button class="glass-btn btn-sm btn-danger" onclick="window.adminRevokeKey(' + JSON.stringify(item.apiKey) + ')">Revoke</button>';
+
+        html += '<tr class="' + (item.revoked ? 'revoked' : '') + '">' +
+          '<td><code>' + item.apiKey + '</code></td>' +
+          '<td><span class="status-badge ' + (item.revoked ? 'badge-revoked' : 'badge-active') + '">' + (item.revoked ? 'Revoked' : 'Active') + '</span></td>' +
+          '<td>' + (item.createdAt ? item.createdAt.slice(11, 19) : '---') + '</td>' +
+          '<td>' + actionBtn + '</td>' +
+        '</tr>';
+      }
+      adminTableBody.innerHTML = html;
+    } catch (err) {
+      if (adminMsgEl) adminMsgEl.innerHTML = '<span style="color: var(--coral);">Error: ' + err.message + '</span>';
+    }
+  }
+
+  window.adminRevokeKey = async function(key) {
+    if (!confirm('Revoke ' + key + '? It will immediately be blocked.')) return;
+    try {
+      var res = await fetch('/apikey/revoke', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: key, secret: currentAdminSecret })
       });
-      var body = await res.json();
-      if (jsonViewer) jsonViewer.textContent = JSON.stringify(body, null, 2);
+      var data = await res.json();
+      if (res.ok && data.success) {
+        loadAdminKeys();
+      } else {
+        alert(data.message || 'Revocation failed');
+      }
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  };
 
-      if (body.success && body.data && body.data.results && body.data.results.length > 0) {
-        var resultsHtml = '';
-        var list = body.data.results.slice(0, 6);
-        for (var i = 0; i < list.length; i++) {
-          var song = list[i];
-          var img = (song.image && song.image[song.image.length - 1] && song.image[song.image.length - 1].url) || '';
-          var artist = (song.artists && song.artists.primary && song.artists.primary.map(function(a) { return a.name; }).join(', ')) || 'Unknown Artist';
-          var durationStr = song.duration ? (Math.floor(song.duration / 60) + ':' + (song.duration % 60 < 10 ? '0' : '') + (song.duration % 60)) : '';
+  window.adminUnrevokeKey = async function(key) {
+    try {
+      var res = await fetch('/api/admin/unrevoke', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: key, secret: currentAdminSecret })
+      });
+      var data = await res.json();
+      if (res.ok && data.success) {
+        loadAdminKeys();
+      } else {
+        alert(data.message || 'Restore failed');
+      }
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  };
 
-          resultsHtml += '<div class="song-card">' +
-            '<img src="' + img + '" alt="' + song.name + '" class="song-art" />' +
-            '<div class="song-info">' +
-              '<div class="song-name">' + song.name + '</div>' +
-              '<div class="song-artist">' + artist + '</div>' +
-              '<div class="song-duration">' + durationStr + (song.year ? ' • ' + song.year : '') + '</div>' +
+  if (adminLoginBtn) adminLoginBtn.addEventListener('click', loadAdminKeys);
+
+  // Music Explorer
+  var searchInput = document.getElementById('search-query-input');
+  var searchBtn = document.getElementById('search-action-btn');
+  var resultsGrid = document.getElementById('search-results-grid');
+  var playerWrapper = document.getElementById('liquid-player');
+  var audioElem = document.getElementById('stream-audio-elem');
+  var playerCover = document.getElementById('player-cover-art');
+  var playerTitle = document.getElementById('player-track-title');
+  var playerArtist = document.getElementById('player-track-artist');
+  var dlLinksContainer = document.getElementById('player-dl-links');
+  var rawJsonBox = document.getElementById('raw-json-box');
+
+  async function searchSongs() {
+    var q = (searchInput && searchInput.value.trim()) || 'Believer';
+    if (resultsGrid) resultsGrid.innerHTML = '<div style="padding: 24px; color: var(--muted); text-align: center;">Searching...</div>';
+
+    try {
+      var res = await fetch('/api/search/songs?query=' + encodeURIComponent(q), {
+        headers: currentApiKey ? { 'X-API-Key': currentApiKey } : {}
+      });
+      var json = await res.json();
+      if (rawJsonBox) rawJsonBox.textContent = JSON.stringify(json, null, 2);
+
+      if (json.success && json.data && json.data.results && json.data.results.length > 0) {
+        var html = '';
+        var items = json.data.results.slice(0, 6);
+        for (var i = 0; i < items.length; i++) {
+          var s = items[i];
+          var art = (s.image && s.image[s.image.length - 1] && s.image[s.image.length - 1].url) || '';
+          var artName = (s.artists && s.artists.primary && s.artists.primary.map(function(a) { return a.name; }).join(', ')) || 'Artist';
+          var duration = s.duration ? (Math.floor(s.duration / 60) + ':' + (s.duration % 60 < 10 ? '0' : '') + (s.duration % 60)) : '';
+
+          html += '<div class="liquid-song-card">' +
+            '<img src="' + art + '" alt="' + s.name + '" class="card-art" />' +
+            '<div class="card-meta">' +
+              '<div class="card-title">' + s.name + '</div>' +
+              '<div class="card-artist">' + artName + '</div>' +
+              '<div class="card-sub">' + duration + (s.year ? ' • ' + s.year : '') + '</div>' +
             '</div>' +
-            '<div class="song-actions">' +
-              '<button class="btn-sm btn-primary" onclick="window.playSong(' + JSON.stringify(encodeURIComponent(JSON.stringify(song))) + ')">▶ Play 320kbps</button>' +
-            '</div>' +
+            '<button class="glass-btn btn-sm" onclick="window.playTrack(' + JSON.stringify(encodeURIComponent(JSON.stringify(s))) + ')">Play</button>' +
           '</div>';
         }
-        searchResults.innerHTML = resultsHtml;
+        resultsGrid.innerHTML = html;
       } else {
-        searchResults.innerHTML = '<div style="padding: 20px; color: var(--muted);">No songs found.</div>';
+        resultsGrid.innerHTML = '<div style="padding: 24px; color: var(--muted); text-align: center;">No tracks found</div>';
       }
-    } catch (err) {
-      if (searchResults) searchResults.innerHTML = '<div style="padding: 20px; color: var(--coral);">Error: ' + err.message + '</div>';
+    } catch (e) {
+      if (resultsGrid) resultsGrid.innerHTML = '<div style="padding: 24px; color: var(--coral); text-align: center;">Request failed</div>';
     }
   }
 
-  window.playSong = function(encoded) {
+  window.playTrack = function(encoded) {
     try {
-      var song = JSON.parse(decodeURIComponent(encoded));
-      if (!song) return;
-      if (playerCard) playerCard.style.display = 'block';
-      if (playerTitle) playerTitle.textContent = song.name;
-      if (playerArtist) playerArtist.textContent = (song.artists && song.artists.primary && song.artists.primary.map(function(a) { return a.name; }).join(', ')) || '';
-      var img = (song.image && song.image[song.image.length - 1] && song.image[song.image.length - 1].url) || '';
-      if (playerArt) playerArt.src = img;
+      var track = JSON.parse(decodeURIComponent(encoded));
+      if (!track) return;
+      if (playerWrapper) playerWrapper.style.display = 'flex';
+      if (playerTitle) playerTitle.textContent = track.name;
+      if (playerArtist) playerArtist.textContent = (track.artists && track.artists.primary && track.artists.primary.map(function(a) { return a.name; }).join(', ')) || '';
+      var cover = (track.image && track.image[track.image.length - 1] && track.image[track.image.length - 1].url) || '';
+      if (playerCover) playerCover.src = cover;
 
-      var bestUrl = '';
-      if (song.downloadUrl && song.downloadUrl.length > 0) {
-        var found320 = song.downloadUrl.find(function(d) { return d.quality === '320kbps'; });
-        bestUrl = (found320 && found320.url) || song.downloadUrl[song.downloadUrl.length - 1].url;
+      var streamUrl = '';
+      if (track.downloadUrl && track.downloadUrl.length > 0) {
+        var hq = track.downloadUrl.find(function(d) { return d.quality === '320kbps'; });
+        streamUrl = (hq && hq.url) || track.downloadUrl[track.downloadUrl.length - 1].url;
       }
 
-      if (audioEl) {
-        audioEl.src = bestUrl;
-        audioEl.play();
+      if (audioElem) {
+        audioElem.src = streamUrl;
+        audioElem.play();
       }
 
-      if (downloadLinksEl && song.downloadUrl) {
-        var pills = '';
-        for (var d = 0; d < song.downloadUrl.length; d++) {
-          var dl = song.downloadUrl[d];
-          pills += '<a href="' + dl.url + '" target="_blank" download class="dl-pill">' + dl.quality + ' ⬇</a> ';
+      if (dlLinksContainer && track.downloadUrl) {
+        var dls = '';
+        for (var k = 0; k < track.downloadUrl.length; k++) {
+          var item = track.downloadUrl[k];
+          dls += '<a href="' + item.url + '" target="_blank" download class="pill-link">' + item.quality + '</a>';
         }
-        downloadLinksEl.innerHTML = pills;
+        dlLinksContainer.innerHTML = dls;
       }
-
-      if (playerCard) playerCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } catch (e) {
-      console.error(e);
-    }
+      playerWrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (e) {}
   };
 
-  if (searchBtn) searchBtn.addEventListener('click', performSearch);
+  if (searchBtn) searchBtn.addEventListener('click', searchSongs);
   if (searchInput) {
     searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') performSearch();
+      if (e.key === 'Enter') searchSongs();
     });
   }
 
-  var routeSearch = document.getElementById('route-filter-input');
-  if (routeSearch) {
-    routeSearch.addEventListener('input', function(e) {
-      var val = e.target.value.toLowerCase();
-      document.querySelectorAll('.route-row').forEach(function(row) {
-        var text = row.textContent.toLowerCase();
-        row.style.display = text.indexOf(val) !== -1 ? 'flex' : 'none';
+  // Route Filter
+  var filterInput = document.getElementById('routes-search-filter');
+  if (filterInput) {
+    filterInput.addEventListener('input', function(e) {
+      var term = e.target.value.toLowerCase();
+      document.querySelectorAll('.route-item').forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().indexOf(term) !== -1 ? 'flex' : 'none';
       });
     });
   }
@@ -536,520 +474,524 @@ const clientScript = `
 
 const styles = `
 :root {
-  color-scheme: dark;
-  --bg: #090a0f;
-  --bg-soft: #10131c;
-  --panel: #141824;
-  --panel-2: #1b2132;
-  --panel-border: rgba(97, 212, 255, 0.12);
-  --text: #f0f3fa;
-  --muted: #8e9bb3;
-  --line: #222b3d;
-  --cyan: #38bdf8;
-  --cyan-glow: rgba(56, 189, 248, 0.25);
-  --green: #4ade80;
+  --bg: #06080c;
+  --bg-subtle: #0a0e17;
+  --glass-bg: rgba(16, 22, 34, 0.42);
+  --glass-bg-hover: rgba(22, 30, 48, 0.58);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-highlight: rgba(255, 255, 255, 0.16);
+  --text-main: #f4f6fa;
+  --text-muted: #7e8b9f;
+  --accent: #38bdf8;
+  --emerald: #34d399;
   --coral: #f87171;
-  --amber: #fbbf24;
-  --violet: #a78bfa;
+  --yellow: #fbbf24;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
+  background-color: var(--bg);
+  color: var(--text-main);
+  line-height: 1.5;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1000px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(167, 139, 250, 0.05) 50%, transparent 80%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.topbar {
+/* Header */
+.liquid-nav {
   position: sticky;
   top: 0;
-  z-index: 100;
-  background: rgba(9, 10, 15, 0.82);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--line);
+  z-index: 50;
+  background: rgba(6, 8, 12, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
 }
-.topbar-inner {
-  max-width: 1200px;
+.nav-container {
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
 }
-.brand {
+.brand-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-decoration: none;
-  color: #fff;
-  font-weight: 700;
-  font-size: 17px;
-}
-.brand-mark {
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  color: #000;
-  font-weight: 900;
-  font-size: 13px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  box-shadow: 0 0 16px var(--cyan-glow);
-}
-.domain-badge {
-  font-size: 11px;
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid var(--cyan);
-  color: var(--cyan);
-  padding: 2px 8px;
-  border-radius: 999px;
+  color: var(--text-main);
   font-weight: 600;
+  font-size: 15px;
 }
-.nav-links {
+.brand-chip {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-highlight);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.domain-pill {
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid var(--glass-border);
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.header-links {
   display: flex;
-  gap: 18px;
+  gap: 16px;
   align-items: center;
 }
-.nav-links a {
-  color: var(--muted);
+.header-links a {
+  color: var(--text-muted);
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--cyan); }
-
-.main-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px 80px;
-  position: relative;
-  z-index: 1;
-}
-
-.hero {
-  text-align: center;
-  padding: 40px 0 32px;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  padding: 6px 14px;
-  border-radius: 999px;
   font-size: 13px;
-  color: var(--cyan);
-  margin-bottom: 20px;
+  transition: color 0.15s;
 }
-.hero h1 {
-  font-size: 42px;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.header-links a:hover { color: var(--text-main); }
+
+/* Main Container */
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
 }
-.hero p {
-  color: var(--muted);
-  font-size: 18px;
-  max-width: 760px;
+
+/* Hero */
+.hero-block {
+  text-align: center;
+  padding: 28px 0 36px;
+}
+.hero-title {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+.hero-subtitle {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 640px;
   margin: 0 auto 28px;
 }
 
-.tabs-nav {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 36px;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 12px;
-  flex-wrap: wrap;
-}
-.tab-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--muted);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 10px 22px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.tab-btn:hover {
-  color: #fff;
-  background: var(--panel);
-}
-.tab-btn.active {
-  color: #000;
-  background: var(--cyan);
-  border-color: var(--cyan);
-  box-shadow: 0 0 20px var(--cyan-glow);
-}
-
-.tab-panel {
-  display: none;
-  animation: fadeIn 0.3s ease;
-}
-.tab-panel.active {
-  display: block;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.glass-card {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 14px;
-  padding: 28px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  margin-bottom: 28px;
-}
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.card-header h2 { font-size: 20px; font-weight: 700; }
-
-.btn-primary {
-  background: var(--cyan);
-  color: #000;
-  font-weight: 700;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 0 14px var(--cyan-glow);
-}
-.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-secondary {
-  background: var(--panel-2);
-  color: var(--text);
-  border: 1px solid var(--line);
-  font-weight: 600;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
-.btn-danger {
-  background: rgba(248, 113, 113, 0.15);
-  border: 1px solid var(--coral);
-  color: var(--coral);
-  font-weight: 600;
-  cursor: pointer;
-}
-.btn-danger:hover { background: var(--coral); color: #000; }
-.btn-outline {
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  cursor: pointer;
-}
-.btn-outline:hover { color: #fff; border-color: var(--muted); }
-.btn-sm {
-  padding: 5px 12px;
-  font-size: 12px;
-  border-radius: 6px;
-}
-
-.badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 999px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.badge-active { background: rgba(74, 222, 128, 0.15); color: var(--green); border: 1px solid var(--green); }
-.badge-revoked { background: rgba(248, 113, 113, 0.15); color: var(--coral); border: 1px solid var(--coral); }
-.code-badge {
-  background: rgba(167, 139, 250, 0.15);
-  color: var(--violet);
-  border: 1px solid var(--violet);
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: monospace;
-}
-
-.key-gen-box {
-  background: var(--bg-soft);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-.key-string-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  background: #06070a;
-  border: 1px solid var(--line);
-  padding: 14px 18px;
-  border-radius: 8px;
-  margin-bottom: 14px;
-}
-.key-string-row code {
-  font-family: "Courier New", Courier, monospace;
-  font-size: 16px;
-  color: var(--cyan);
-  word-break: break-all;
-  font-weight: 700;
-}
-.key-meta-row {
-  display: flex;
-  gap: 20px;
-  color: var(--muted);
-  font-size: 13px;
-  flex-wrap: wrap;
-}
-
-.keys-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 16px;
-}
-.keys-table th, .keys-table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid var(--line);
-}
-.keys-table th {
-  color: var(--muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.table-key-text {
-  font-family: monospace;
-  font-size: 13px;
-  color: var(--text);
-}
-.revoked-row td {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-.action-cell {
-  display: flex;
-  gap: 8px;
-}
-
-.snippets-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-}
-.snippet-card {
-  background: #07090e;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 16px;
-}
-.snippet-card h4 {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-.snippet-card pre {
-  background: transparent;
-  overflow-x: auto;
-  font-size: 12px;
-  color: #cad5e8;
-  line-height: 1.5;
-}
-
-.search-bar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.search-input {
-  flex: 1;
-  background: var(--bg-soft);
-  border: 1px solid var(--line);
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-size: 15px;
-  outline: none;
-}
-.search-input:focus { border-color: var(--cyan); }
-.songs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.song-card {
-  background: var(--panel-2);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 14px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.song-art {
-  width: 60px;
-  height: 60px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-.song-info { flex: 1; min-width: 0; }
-.song-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.song-artist { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.song-duration { color: var(--cyan); font-size: 11px; margin-top: 2px; }
-
-.player-card {
-  background: linear-gradient(135deg, #161c2b, #0f1420);
-  border: 1px solid var(--cyan);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
-  display: none;
-}
-.player-layout {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.player-art-lg {
-  width: 88px;
-  height: 88px;
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 0 16px var(--cyan-glow);
-}
-.player-meta { flex: 1; }
-.dl-pills-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-.dl-pill {
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid var(--cyan);
-  color: var(--cyan);
-  padding: 4px 10px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 600;
-}
-.dl-pill:hover { background: var(--cyan); color: #000; }
-
-.route-group {
-  margin-bottom: 24px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.route-group-header {
-  padding: 12px 18px;
-  background: var(--bg-soft);
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.route-row {
-  padding: 10px 18px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-.route-row:last-child { border-bottom: none; }
-.method-tag {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 4px;
-  min-width: 48px;
-  text-align: center;
-}
-.method-tag.get { background: rgba(56, 189, 248, 0.2); color: var(--cyan); }
-.method-tag.post { background: rgba(74, 222, 128, 0.2); color: var(--green); }
-.route-path { font-family: monospace; font-size: 13px; color: #fff; font-weight: 600; }
-.route-desc { color: var(--muted); font-size: 13px; margin-left: auto; }
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 24px;
-}
-.feature-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 24px;
-}
-.feature-icon { font-size: 28px; margin-bottom: 12px; }
-.feature-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-.feature-body { color: var(--muted); font-size: 14px; }
-
-.stats-grid {
+/* Stats Row */
+.stats-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin: 36px 0;
+  gap: 12px;
+  margin-bottom: 32px;
 }
-.stat-card {
-  background: var(--panel);
-  border: 1px solid var(--line);
+.stat-box {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-highlight);
   border-radius: 10px;
-  padding: 18px;
+  padding: 16px;
+  text-align: left;
 }
-.stat-title { font-size: 18px; font-weight: 800; color: var(--cyan); margin-bottom: 4px; }
-.stat-desc { font-size: 13px; color: var(--muted); }
+.stat-num {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.stat-label {
+  color: var(--text-muted);
+  font-size: 12px;
+}
 
-.footer {
-  border-top: 1px solid var(--line);
-  padding: 32px 24px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
+/* Liquid Navigation Tabs */
+.liquid-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 10px;
+  flex-wrap: wrap;
 }
-.footer a { color: var(--cyan); text-decoration: none; }
+.tab-trigger {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-trigger:hover {
+  color: var(--text-main);
+  background: var(--glass-bg);
+}
+.tab-trigger.active {
+  color: #fff;
+  background: var(--glass-bg-hover);
+  border: 1px solid var(--glass-border-highlight);
+}
+
+/* Tab Panels */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Liquid Glass Card */
+.glass-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-highlight);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.panel-heading {
+  font-size: 17px;
+  font-weight: 700;
+}
+.panel-subtext {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Glass Buttons */
+.glass-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-highlight);
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.glass-btn:hover {
+  background: var(--glass-bg-hover);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.glass-btn.btn-accent {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.glass-btn.btn-accent:hover {
+  background: var(--accent);
+  color: #000;
+}
+.glass-btn.btn-danger {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: var(--coral);
+  color: var(--coral);
+}
+.glass-btn.btn-danger:hover {
+  background: var(--coral);
+  color: #000;
+}
+.glass-btn.btn-sm {
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 6px;
+}
+
+/* Key Generator Box */
+.key-glass-box {
+  background: rgba(6, 8, 12, 0.55);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.key-main-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.key-text-large {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+}
+.key-meta-bar {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--text-muted);
+  align-items: center;
+}
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+.status-dot.green { background: var(--emerald); }
+.status-dot.red { background: var(--coral); }
+.status-dot.yellow { background: var(--yellow); }
+
+/* Code Snippets */
+.snippets-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.code-card {
+  background: rgba(6, 8, 12, 0.55);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 14px;
+}
+.code-header {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.code-card pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  color: #cbd5e1;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+
+/* Glass Inputs */
+.glass-input {
+  background: rgba(6, 8, 12, 0.6);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.glass-input:focus {
+  border-color: var(--accent);
+}
+
+/* Tables */
+.liquid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.liquid-table th, .liquid-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--glass-border);
+}
+.liquid-table th {
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.badge-active { background: rgba(52, 211, 153, 0.15); color: var(--emerald); }
+.badge-revoked { background: rgba(248, 113, 113, 0.15); color: var(--coral); }
+.revoked td { opacity: 0.45; text-decoration: line-through; }
+
+/* Music Explorer */
+.search-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.search-input-lg {
+  flex: 1;
+  background: rgba(6, 8, 12, 0.6);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+.search-input-lg:focus { border-color: var(--accent); }
+
+.songs-liquid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.liquid-song-card {
+  background: rgba(10, 14, 23, 0.5);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.card-art {
+  width: 52px;
+  height: 52px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.card-meta { flex: 1; min-width: 0; }
+.card-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-artist { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-sub { font-size: 10px; color: var(--accent); margin-top: 2px; }
+
+/* Player */
+.player-box {
+  background: rgba(14, 20, 32, 0.65);
+  border: 1px solid var(--glass-border-highlight);
+  border-radius: 10px;
+  padding: 16px;
+  display: none;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.player-art {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.player-info { flex: 1; min-width: 200px; }
+.pill-link {
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid var(--glass-border);
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 6px;
+}
+.pill-link:hover { background: var(--accent); color: #000; }
+
+/* Endpoints Catalog */
+.liquid-group {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.group-header {
+  padding: 10px 16px;
+  background: rgba(6, 8, 12, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--glass-border);
+}
+.group-title { font-size: 13px; font-weight: 700; }
+.pill {
+  font-size: 10px;
+  color: var(--text-muted);
+  border: 1px solid var(--glass-border);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+.route-item {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  font-size: 12px;
+}
+.route-item:last-child { border-bottom: none; }
+.method-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  min-width: 36px;
+  text-align: center;
+}
+.route-uri {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #fff;
+  font-weight: 600;
+}
+.route-desc {
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+/* Footer */
+.liquid-footer {
+  border-top: 1px solid var(--glass-border);
+  padding: 28px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.liquid-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Icons */
+.icon {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  vertical-align: middle;
+}
 `
+
+// SVG Icon Helpers
+const KeyIcon = `<svg class="icon" viewBox="0 0 24 24"><path d="m21 2-2 2m-1.5 1.5L14 9l-2-2-4 4 2 2-4 4-2-2-2 2 4 4 2-2 2 2 4-4 2 2 4-4 2-2z"/></svg>`
+const MusicIcon = `<svg class="icon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`
+const ListIcon = `<svg class="icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`
+const LockIcon = `<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`
 
 Home.get('/', (c) => {
   return c.html(`<!DOCTYPE html>
@@ -1057,115 +999,98 @@ Home.get('/', (c) => {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escapeHtml(API_NAME)} - Cloudflare Edge</title>
+    <title>${escapeHtml(API_NAME)}</title>
     <meta name="description" content="${escapeHtml(DESCRIPTION)}" />
     <style>${styles}</style>
   </head>
   <body>
-    <header class="topbar">
-      <div class="topbar-inner">
-        <a class="brand" href="/">
-          <span class="brand-mark">Sh</span>
+    <header class="liquid-nav">
+      <div class="nav-container">
+        <a class="brand-group" href="/">
+          <span class="brand-chip">Sh</span>
           <span>${escapeHtml(API_NAME)}</span>
-          <span class="domain-badge">${escapeHtml(CUSTOM_DOMAIN)}</span>
+          <span class="domain-pill">${escapeHtml(DISPLAY_DOMAIN)}</span>
         </a>
-        <nav class="nav-links">
+        <nav class="header-links">
           <a href="/docs">Docs</a>
-          <a href="/swagger">OpenAPI</a>
+          <a href="/swagger">Swagger</a>
           <a href="/health">Health</a>
           <a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
       </div>
     </header>
 
-    <div class="main-wrapper">
-      <section class="hero">
-        <div class="hero-badge">⚡ Cloudflare Edge • ${escapeHtml(CUSTOM_DOMAIN)} • No App Rate Limit</div>
-        <h1>ShnwazDev JioSaavn Music API</h1>
-        <p>
-          Fast, decentralized music streaming API for JioSaavn songs, 320kbps audio, albums, playlists, synced lyrics, and recommendations.
+    <main class="container">
+      <section class="hero-block">
+        <h1 class="hero-title">ShnwazDev JioSaavn API</h1>
+        <p class="hero-subtitle">
+          Modern liquid glass API client and edge infrastructure for JioSaavn songs, 320kbps streams, albums, artists, and synced lyrics.
         </p>
 
-        <div class="stats-grid">
+        <div class="stats-row">
           ${renderStats()}
         </div>
       </section>
 
-      <!-- Navigation Tabs -->
-      <nav class="tabs-nav" role="tablist">
-        <button class="tab-btn active" data-tab-target="tab-keys">🔑 API Key Generator & Manager</button>
-        <button class="tab-btn" data-tab-target="tab-explorer">🎵 Live Music Explorer</button>
-        <button class="tab-btn" data-tab-target="tab-endpoints">📋 Endpoints Catalog (47+)</button>
-        <button class="tab-btn" data-tab-target="tab-features">✨ Features & Specs</button>
+      <!-- Tabs Navigation -->
+      <nav class="liquid-tabs" role="tablist">
+        <button class="tab-trigger active" data-tab-btn="tab-keys">${KeyIcon} API Key</button>
+        <button class="tab-trigger" data-tab-btn="tab-explorer">${MusicIcon} Explorer & Player</button>
+        <button class="tab-trigger" data-tab-btn="tab-catalog">${ListIcon} Endpoints (47+)</button>
+        <button class="tab-trigger" data-tab-btn="tab-admin">${LockIcon} Admin Panel</button>
       </nav>
 
-      <!-- Tab 1: API Keys -->
-      <div class="tab-panel active" id="tab-keys" data-tab-panel>
-        <div class="glass-card">
-          <div class="card-header">
+      <!-- Tab 1: Key Generator -->
+      <div class="panel active" id="tab-keys" data-tab-panel>
+        <div class="glass-container">
+          <div class="panel-header">
             <div>
-              <h2>Generate & Manage API Keys</h2>
-              <p style="color: var(--muted); font-size: 14px;">Generate signed <code>Sh.xxx</code> API keys with 3-digit randomized codes. Revoke or test anytime.</p>
+              <h2 class="panel-heading">Generate API Key</h2>
+              <p class="panel-subtext">Instant Sh.Qre format key for your application</p>
             </div>
-            <button class="btn-primary" id="btn-generate-key">⚡ Generate New Sh. Key</button>
+            <button class="glass-btn btn-accent" id="btn-gen-key">Generate New Key</button>
           </div>
 
-          <div class="key-gen-box">
-            <div class="key-string-row">
-              <code id="gen-key-display">Generating your Sh. API key...</code>
-              <button class="btn-secondary btn-sm" onclick="window.copyText(document.getElementById('gen-key-display').textContent, this)">Copy Key</button>
+          <div class="key-glass-box">
+            <div class="key-main-row">
+              <span class="key-text-large" id="key-display-text">Generating...</span>
+              <div style="display: flex; gap: 8px;">
+                <button class="glass-btn btn-sm" onclick="window.copyValue(document.getElementById('key-display-text').textContent, this)">Copy Key</button>
+                <button class="glass-btn btn-sm" onclick="window.testCurrentKey()">Test Live</button>
+              </div>
             </div>
-            <div class="key-meta-row">
-              <span>Prefix: <strong style="color: var(--cyan)">Sh.</strong></span>
-              <span id="gen-3digit-badge" class="code-badge">3-Digit Code: ...</span>
-              <span>Status: <span id="gen-status-badge" class="badge badge-active">Active</span></span>
-              <span>Generated: <strong id="gen-time-badge" style="color: #fff">...</strong></span>
-              <span id="test-key-result"></span>
+            <div class="key-meta-bar">
+              <span>Format: <strong>Sh.&lt;code&gt;</strong></span>
+              <span id="key-test-feedback"><span class="status-dot green"></span> Ready</span>
             </div>
           </div>
 
-          <h3 style="font-size: 16px; margin: 24px 0 12px;">Your Generated Keys (Stored Locally)</h3>
-          <div style="overflow-x: auto;">
-            <table class="keys-table">
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>API Key</th>
-                  <th>Status</th>
-                  <th>Generated</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="keys-table-body"></tbody>
-            </table>
-          </div>
-
-          <div class="snippets-grid">
-            <div class="snippet-card">
-              <h4>cURL Request</h4>
-              <pre><code data-snippet-key="curl -X GET 'https://${CUSTOM_DOMAIN}/api/search?query=Kesariya' \\
-  -H 'X-API-Key: {key}'">curl -X GET 'https://${CUSTOM_DOMAIN}/api/search?query=Kesariya' \
+          <div class="snippets-row">
+            <div class="code-card">
+              <div class="code-header"><span>cURL Request</span><button class="glass-btn btn-sm" onclick="window.copyValue(this.closest('.code-card').querySelector('pre').textContent, this)">Copy</button></div>
+              <pre><code data-code-snippet="curl -X GET 'https://${DISPLAY_DOMAIN}/api/search?query=Believer' \\
+  -H 'X-API-Key: {KEY}'">curl -X GET 'https://${DISPLAY_DOMAIN}/api/search?query=Believer' \
   -H 'X-API-Key: ...'</code></pre>
             </div>
 
-            <div class="snippet-card">
-              <h4>JavaScript (Fetch)</h4>
-              <pre><code data-snippet-key="const res = await fetch('https://${CUSTOM_DOMAIN}/api/songs?ids=csaAEio2', {
-  headers: { 'X-API-Key': '{key}' }
+            <div class="code-card">
+              <div class="code-header"><span>JavaScript Fetch</span><button class="glass-btn btn-sm" onclick="window.copyValue(this.closest('.code-card').querySelector('pre').textContent, this)">Copy</button></div>
+              <pre><code data-code-snippet="const res = await fetch('https://${DISPLAY_DOMAIN}/api/songs?ids=csaAEio2', {
+  headers: { 'X-API-Key': '{KEY}' }
 });
-const data = await res.json();">const res = await fetch('https://${CUSTOM_DOMAIN}/api/songs?ids=csaAEio2', {
+const data = await res.json();">const res = await fetch('https://${DISPLAY_DOMAIN}/api/songs?ids=csaAEio2', {
   headers: { 'X-API-Key': '...' }
 });</code></pre>
             </div>
 
-            <div class="snippet-card">
-              <h4>Python (requests)</h4>
-              <pre><code data-snippet-key="import requests
+            <div class="code-card">
+              <div class="code-header"><span>Python Requests</span><button class="glass-btn btn-sm" onclick="window.copyValue(this.closest('.code-card').querySelector('pre').textContent, this)">Copy</button></div>
+              <pre><code data-code-snippet="import requests
 
 res = requests.get(
-    'https://${CUSTOM_DOMAIN}/api/search/songs',
+    'https://${DISPLAY_DOMAIN}/api/search/songs',
     params={'query': 'Believer'},
-    headers={'X-API-Key': '{key}'}
+    headers={'X-API-Key': '{KEY}'}
 )
 print(res.json())">import requests
 # headers={'X-API-Key': '...'}</code></pre>
@@ -1174,69 +1099,92 @@ print(res.json())">import requests
         </div>
       </div>
 
-      <!-- Tab 2: Explorer -->
-      <div class="tab-panel" id="tab-explorer" data-tab-panel>
-        <div class="glass-card">
-          <div class="card-header">
+      <!-- Tab 2: Explorer & Player -->
+      <div class="panel" id="tab-explorer" data-tab-panel>
+        <div class="glass-container">
+          <div class="panel-header">
             <div>
-              <h2>Live API Explorer & 320kbps Player</h2>
-              <p style="color: var(--muted); font-size: 14px;">Test search queries in real time and listen to decrypted 320kbps high-fidelity audio streams.</p>
+              <h2 class="panel-heading">Live Search & 320kbps Player</h2>
+              <p class="panel-subtext">Search tracks and listen directly on Cloudflare Edge</p>
             </div>
           </div>
 
-          <div class="search-bar">
-            <input type="text" class="search-input" id="explorer-search-input" placeholder="Search for songs, artists, albums (e.g. Believer, Kesariya, Arijit Singh)..." value="Believer" />
-            <button class="btn-primary" id="explorer-search-btn">🔍 Search</button>
+          <div class="search-controls">
+            <input type="text" class="search-input-lg" id="search-query-input" placeholder="Search track name, artist, album (e.g. Believer, Kesariya)..." value="Believer" />
+            <button class="glass-btn btn-accent" id="search-action-btn">Search</button>
           </div>
 
-          <!-- Audio Stream Player Card -->
-          <div class="player-card" id="explorer-player-card">
-            <div class="player-layout">
-              <img id="player-art" class="player-art-lg" src="" alt="Album Art" />
-              <div class="player-meta">
-                <h3 id="player-title" style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">Song Title</h3>
-                <p id="player-artist" style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">Artist Name</p>
-                <audio id="audio-stream-player" controls style="width: 100%; max-width: 480px; height: 36px;"></audio>
-                <div class="dl-pills-row" id="player-download-links"></div>
-              </div>
+          <!-- Liquid Audio Player -->
+          <div class="player-box" id="liquid-player">
+            <img id="player-cover-art" class="player-art" src="" alt="Album Art" />
+            <div class="player-info">
+              <div id="player-track-title" style="font-weight: 700; font-size: 15px; margin-bottom: 2px;">Track</div>
+              <div id="player-track-artist" style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Artist</div>
+              <audio id="stream-audio-elem" controls style="width: 100%; height: 32px;"></audio>
+              <div id="player-dl-links" style="margin-top: 8px;"></div>
             </div>
           </div>
 
-          <div class="songs-grid" id="explorer-results"></div>
+          <div class="songs-liquid-grid" id="search-results-grid"></div>
 
-          <h4 style="font-size: 14px; color: var(--muted); margin: 20px 0 8px;">Live JSON Response</h4>
-          <pre style="background: #06070a; padding: 16px; border-radius: 8px; border: 1px solid var(--line); max-height: 240px; overflow: auto; font-size: 12px; color: var(--cyan);"><code id="explorer-json-viewer">// Search to see live JSON response</code></pre>
+          <div style="font-size: 12px; color: var(--text-muted); margin: 16px 0 6px;">JSON Output</div>
+          <pre style="background: rgba(6,8,12,0.6); padding: 14px; border-radius: 8px; border: 1px solid var(--glass-border); max-height: 200px; overflow: auto; font-size: 11px; color: var(--accent);"><code id="raw-json-box">// Search above to inspect live payload</code></pre>
         </div>
       </div>
 
-      <!-- Tab 3: Endpoints -->
-      <div class="tab-panel" id="tab-endpoints" data-tab-panel>
-        <div class="glass-card">
-          <div class="card-header">
+      <!-- Tab 3: Endpoints Catalog -->
+      <div class="panel" id="tab-catalog" data-tab-panel>
+        <div class="glass-container">
+          <div class="panel-header">
             <div>
-              <h2>All Available API Endpoints (47+)</h2>
-              <p style="color: var(--muted); font-size: 14px;">Browse and filter all available music, search, lyrics, podcasts, and browse routes.</p>
+              <h2 class="panel-heading">Endpoint Catalog (47+ Routes)</h2>
+              <p class="panel-subtext">Comprehensive listing of all API resources</p>
             </div>
-            <input type="text" id="route-filter-input" class="search-input" style="max-width: 280px; padding: 8px 14px;" placeholder="Filter routes..." />
+            <input type="text" id="routes-search-filter" class="glass-input" placeholder="Filter routes..." style="width: 220px;" />
           </div>
 
-          <div class="route-groups-container">
+          <div>
             ${renderRouteGroups()}
           </div>
         </div>
       </div>
 
-      <!-- Tab 4: Features -->
-      <div class="tab-panel" id="tab-features" data-tab-panel>
-        <div class="features-grid">
-          ${renderFeatures()}
+      <!-- Tab 4: Admin Panel -->
+      <div class="panel" id="tab-admin" data-tab-panel>
+        <div class="glass-container">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-heading">Admin Key Management</h2>
+              <p class="panel-subtext">Restricted panel to rework, revoke, and manage all active keys</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap;">
+            <input type="password" id="admin-pass-input" class="glass-input" placeholder="Enter Admin Secret" value="shnwazdev-admin" style="width: 260px;" />
+            <button class="glass-btn btn-accent" id="admin-login-btn">Unlock Admin Panel</button>
+            <span id="admin-msg" style="font-size: 12px;"></span>
+          </div>
+
+          <div id="admin-table-container" style="display: none; overflow-x: auto;">
+            <table class="liquid-table">
+              <thead>
+                <tr>
+                  <th>API Key</th>
+                  <th>Status</th>
+                  <th>Issued</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-table-body"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
 
-    <footer class="footer">
-      <p>Built with Hono, TypeScript, OpenAPI & Cloudflare Workers.</p>
-      <p style="margin-top: 6px;"><a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">GitHub Repository</a> • <a href="/docs">Scalar Docs</a> • <a href="/swagger">Swagger JSON</a></p>
+    <footer class="liquid-footer">
+      <p>Built with Hono, TypeScript, OpenAPI on Cloudflare Workers.</p>
+      <p style="margin-top: 6px;"><a href="${REPOSITORY_URL}" target="_blank" rel="noreferrer">GitHub</a> • <a href="/docs">Scalar Docs</a> • <a href="/swagger">Swagger</a></p>
     </footer>
 
     <script>${clientScript}</script>

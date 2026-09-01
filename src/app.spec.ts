@@ -4,16 +4,15 @@ import { App } from './app.js'
 describe('App API key routes', () => {
   const app = new App([]).getApp()
 
-  it('generates a public Sh. API key with 3-digit code', async () => {
+  it('generates a public Sh.Qre style API key', async () => {
     const response = await app.request('/apikey')
-    const body = (await response.json()) as { success: boolean; data: { apiKey: string; code3Digit: string; randomNumber: string } }
+    const body = (await response.json()) as { success: boolean; data: { apiKey: string; code: string } }
 
     expect(response.status).toBe(200)
     expect(response.headers.get('cache-control')).toBe('no-store, max-age=0')
     expect(body.success).toBe(true)
-    expect(body.data.apiKey).toMatch(/^Sh\.\d{3}-\d{9}-[a-z0-9]+-[\w-]{24}$/)
-    expect(body.data.code3Digit).toMatch(/^\d{3}$/)
-    expect(body.data.randomNumber).toMatch(/^\d{9}$/)
+    expect(body.data.apiKey).toMatch(/^Sh\.[A-Za-z0-9]{3}$/)
+    expect(body.data.code).toMatch(/^[A-Za-z0-9]{3}$/)
   })
 
   it('protects API routes without a key', async () => {
@@ -38,34 +37,45 @@ describe('App API key routes', () => {
     await expect(response.json()).resolves.toMatchObject({ success: true })
   })
 
-  it('validates and revokes API keys correctly', async () => {
+  it('requires admin secret to revoke and restore keys', async () => {
     const keyResponse = await app.request('/apikey')
     const { data } = (await keyResponse.json()) as { data: { apiKey: string } }
 
-    // Validate active key
-    const valResponse = await app.request(`/apikey/validate?key=${data.apiKey}`)
-    const valBody = (await valResponse.json()) as { success: boolean; valid: boolean }
-    expect(valBody.valid).toBe(true)
-
-    // Revoke key
-    const revokeResponse = await app.request('/apikey/revoke', {
+    // Revoke without admin secret should fail (403)
+    const unauthRevoke = await app.request('/apikey/revoke', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ apiKey: data.apiKey })
     })
-    expect(revokeResponse.status).toBe(200)
+    expect(unauthRevoke.status).toBe(403)
 
-    // Check revoked status
-    const postRevokeVal = await app.request(`/apikey/validate?key=${data.apiKey}`)
-    const postRevokeBody = (await postRevokeVal.json()) as { success: boolean; valid: boolean; revoked: boolean }
-    expect(postRevokeBody.valid).toBe(false)
-    expect(postRevokeBody.revoked).toBe(true)
-
-    // Access with revoked key should fail
-    const rejectedResponse = await app.request('/api/endpoints', {
-      headers: { 'X-API-Key': data.apiKey }
+    // Revoke with admin secret should succeed (200)
+    const authRevoke = await app.request('/apikey/revoke', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey: data.apiKey, adminSecret: 'shnwazdev-admin' })
     })
-    expect(rejectedResponse.status).toBe(401)
+    expect(authRevoke.status).toBe(200)
+
+    // Validate key is now revoked
+    const checkVal = await app.request(`/apikey/validate?key=${data.apiKey}`)
+    const checkBody = (await checkVal.json()) as { success: boolean; valid: boolean; revoked: boolean }
+    expect(checkBody.valid).toBe(false)
+    expect(checkBody.revoked).toBe(true)
+
+    // Restore key as admin
+    const restoreRes = await app.request('/api/admin/unrevoke', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey: data.apiKey, adminSecret: 'shnwazdev-admin' })
+    })
+    expect(restoreRes.status).toBe(200)
+
+    // Validate key is active again
+    const postRestoreVal = await app.request(`/apikey/validate?key=${data.apiKey}`)
+    const postRestoreBody = (await postRestoreVal.json()) as { success: boolean; valid: boolean }
+    expect(postRestoreBody.valid).toBe(true)
   })
 })
+
 

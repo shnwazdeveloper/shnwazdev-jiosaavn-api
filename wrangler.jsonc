@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "shnwazdev-jiosaavn-api",
+  "name": "sh-jio",
   "main": "src/server.ts",
   "compatibility_date": "2025-01-01",
   "compatibility_flags": [
